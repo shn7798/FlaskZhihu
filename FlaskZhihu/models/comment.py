@@ -2,17 +2,17 @@
 __author__ = 'shn7798'
 
 from FlaskZhihu.extensions import db
+from FlaskZhihu.models.base import DateTimeMixin
 
 
-class Comment(db.Model):
+class Comment(DateTimeMixin, db.Model):
     __tablename__ = 'comment'
 
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
-    create_time = db.Column('create_time', db.DateTime)
-    update_time = db.Column('update_time', db.DateTime)
     content = db.Column('content', db.String(4096))
     comment_type = db.Column('comment_type', db.Integer)
     user_id = db.Column('user_id', db.ForeignKey(u'user.id'), nullable=False, index=True)
+    user_hashid = db.Column('user_hashid', db.String(32))
     voteup = db.Column('voteup', db.Integer)
 
     quote_comment_id = db.Column('quote_comment_id', db.ForeignKey(u'comment.id'), index=True)

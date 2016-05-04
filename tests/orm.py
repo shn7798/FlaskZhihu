@@ -15,34 +15,29 @@ String = db.String
 relationship = db.relationship
 backref=db.backref
 
-class Node1(Base):
-    __tablename__ = 'node1'
-    id = Column(Integer, primary_key=True)
-    parent_id = Column(Integer, ForeignKey('node1.id'))
-    data = Column(String(50))
-    parent = relationship("Node1", remote_side=[id])
+#
+# class Node1(Base):
+#     __tablename__ = 'node1'
+#     id = Column(Integer, primary_key=True)
+#     parent_id = Column(Integer, ForeignKey('node1.id'))
+#     data = Column(String(50))
+#     parent = relationship("Node1", remote_side=[id])
+#
+# class Node2(Base):
+#     __tablename__ = 'node2'
+#     id = Column(Integer, primary_key=True)
+#     parent_id = Column(Integer, ForeignKey('node2.id'))
+#     data = Column(String(50))
+#     children = relationship("Node2",
+#                 backref=backref('parent', remote_side=[id])
+#             )
 
-class Node2(Base):
-    __tablename__ = 'node2'
-    id = Column(Integer, primary_key=True)
-    parent_id = Column(Integer, ForeignKey('node2.id'))
-    data = Column(String(50))
-    children = relationship("Node2",
-                backref=backref('parent', remote_side=[id])
-            )
 
 
-if __name__ == '__main__':
-        app = Flask(__name__)
-        app.config.from_object(TestSettings())
-        db.init_app(app)
+def init(db):
 
-        ctx = app.app_context()
-
-        ctx.push()
         db.create_all()
         session = db.session()
-
 
         user1 = User()
         user1.id = 1
@@ -65,13 +60,11 @@ if __name__ == '__main__':
         session.add_all([user1, user2, user3])
         session.commit()
 
-        u1 = User.query.filter(User.username=='shn7798_1').first_or_404()
-        u2 = User.query.filter(User.id==2).first_or_404()
+        u1 = User.query.filter(User.username == 'shn7798_1').first_or_404()
+        u2 = User.query.filter(User.id == 2).first_or_404()
 
-        assert(user1 == u1)
-        assert(user2 == u2)
-
-
+        assert (user1 == u1)
+        assert (user2 == u2)
 
         # 创建问题1
         question1 = Question()
@@ -82,10 +75,10 @@ if __name__ == '__main__':
         session.add(question1)
         session.commit()
 
-        q1 = Question.query.filter(Question.id==1).first_or_404()
-        assert(q1.title == 'question 1')
-        assert(q1.content == 'question 1 content')
-        assert(q1.user_id == user1.id)
+        q1 = Question.query.filter(Question.id == 1).first_or_404()
+        assert (q1.title == 'question 1')
+        assert (q1.content == 'question 1 content')
+        assert (q1.user_id == user1.id)
 
         # user2 创建答案
         answer1 = Answer()
@@ -97,9 +90,9 @@ if __name__ == '__main__':
         session.add(answer1)
         session.commit()
 
-        a1 = Answer.query.filter(Answer.id==11).first_or_404()
-        assert(a1.content == 'question 1 answer')
-        assert(a1.user_id == user2.id)
+        a1 = Answer.query.filter(Answer.id == 11).first_or_404()
+        assert (a1.content == 'question 1 answer')
+        assert (a1.user_id == user2.id)
 
         user1.op_on_questions.append(question1)
         uoq = user1.op_on_question(question1)
@@ -118,6 +111,16 @@ if __name__ == '__main__':
         user1.block_user(user3)
         session.commit()
 
+
+if __name__ == '__main__':
+        app = Flask(__name__)
+        app.config.from_object(TestSettings())
+        db.init_app(app)
+
+        ctx = app.app_context()
+
+        ctx.push()
+        session = db.session()
 
 
 

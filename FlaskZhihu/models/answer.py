@@ -2,20 +2,20 @@
 __author__ = 'shn7798'
 
 from FlaskZhihu.extensions import db
-from .user import UserOnAnswer
+from FlaskZhihu.models.base import DateTimeMixin
+from FlaskZhihu.models.user import UserOnAnswer
 from FlaskZhihu.constants import VOTE_UP, VOTE_DOWN, VOTE_NONE
 
-class Answer(db.Model):
+class Answer(DateTimeMixin, db.Model):
     __tablename__ = 'answer'
 
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
-    create_time = db.Column('create_time', db.DateTime)
-    update_time = db.Column('update_time', db.DateTime)
     content = db.Column('content', db.LargeBinary)
     thanks_count = db.Column('thanks_count', db.Integer)
-    excerpt = db.Column('excerpt', db.String(1024))
-    user_id = db.Column('user_id', db.ForeignKey(u'user.id'), nullable=False, index=True)
-    question_id = db.Column('question_id', db.ForeignKey(u'question.id'), nullable=False, index=True)
+    excerpt = db.Column('excerpt', db.String(4096))
+    user_id = db.Column('user_id', db.ForeignKey(u'user.id'), index=True)
+    user_hashid = db.Column('user_hashid', db.String(32))
+    question_id = db.Column('question_id', db.ForeignKey(u'question.id'), index=True)
     collection_id = db.Column('collection_id', db.ForeignKey(u'collection.id'), index=True)
 
     user_on_answer = db.relationship(u'UserOnAnswer', backref='answer')

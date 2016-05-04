@@ -2,17 +2,17 @@
 __author__ = 'shn7798'
 
 from FlaskZhihu.extensions import db
+from FlaskZhihu.models.base import DateTimeMixin
 
 
-class Collection(db.Model):
+class Collection(DateTimeMixin, db.Model):
     __tablename__ = 'collection'
 
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
-    create_time = db.Column('create_time', db.DateTime)
-    update_time = db.Column('update_time', db.DateTime)
     title = db.Column('title', db.String(60))
     description = db.Column('description', db.String(4096))
     user_id = db.Column('user_id', db.ForeignKey(u'user.id'), nullable=False, index=True)
+    user_hashid = db.Column('user_hashid', db.String(32))
 
     answers = db.relationship(u'Answer', secondary='collection_and_answer', backref='collections')
     comments = db.relationship(u'Comment', backref='collections')
@@ -22,7 +22,7 @@ class Collection(db.Model):
         return '<%s %r>' % (self.__class__.__name__, self.title)
 
 
-class CollectionAndAnswer(db.Model):
+class CollectionAndAnswer(DateTimeMixin, db.Model):
     __tablename__ = 'collection_and_answer'
 
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)

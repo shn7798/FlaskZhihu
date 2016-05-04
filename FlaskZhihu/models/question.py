@@ -2,22 +2,22 @@
 __author__ = 'shn7798'
 
 from FlaskZhihu.extensions import db
-from .user import UserOnQuestion
+from FlaskZhihu.models.user import UserOnQuestion
+from FlaskZhihu.models.base import DateTimeMixin
 
 
-class Question(db.Model):
+class Question(DateTimeMixin, db.Model):
     __tablename__ = 'question'
 
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
-    create_time = db.Column('create_time', db.DateTime)
-    update_time = db.Column('update_time', db.DateTime)
     answers_update_time = db.Column('answers_update_time', db.DateTime)
-    title = db.Column('title', db.String(60))
+    title = db.Column('title', db.String(500))
     content = db.Column('content', db.LargeBinary)
-    excerpt = db.Column('excerpt', db.String(1024))
+    excerpt = db.Column('excerpt', db.String(4096))
     answer_ids = db.Column('answer_ids', db.Integer)
     status = db.Column('status', db.String(45))
-    user_id = db.Column('user_id', db.ForeignKey(u'user.id'), nullable=False, index=True)
+    user_id = db.Column('user_id', db.ForeignKey(u'user.id'), index=True)
+    user_hashid = db.Column('user_hashid', db.String(32))
 
     answers = db.relationship(u'Answer', backref='question')
     comments = db.relationship(u'Comment', backref='question')

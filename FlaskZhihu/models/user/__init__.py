@@ -2,9 +2,12 @@
 __author__ = 'shn7798'
 
 from FlaskZhihu.extensions import db
+from FlaskZhihu.models.base import DateTimeMixin
 from .operation import *
+from werkzeug.security import generate_password_hash, check_password_hash
 
-class UserOnUser(db.Model):
+
+class UserOnUser(DateTimeMixin, db.Model):
     __tablename__ = 'user_on_user'
 
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
@@ -17,19 +20,17 @@ class UserOnUser(db.Model):
 class User(
     UserOperationMixin, QuestionOperationMixin, AnswerOperationMixin, CollectionOperationMixin,
     CommentOperationMixin,
-    db.Model):
+    DateTimeMixin, db.Model):
 
     __tablename__ = 'user'
 
-    id = db.Column('id', db.Integer, primary_key=True)
-    create_time = db.Column('create_time', db.DateTime)
-    update_time = db.Column('update_time', db.DateTime)
-    username = db.Column('username', db.String(45), primary_key=True, nullable=False, unique=True)
-    password = db.Column('password', db.String(100), nullable=False)
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    user_hashid = db.Column('user_hashid', db.String(32))
+    username = db.Column('username', db.String(45))
     name = db.Column('name', db.String(45))
     gender = db.Column('gender', db.Integer)
-    description = db.Column('description', db.String(200))
-    headline = db.Column('headline', db.String(100))
+    description = db.Column('description', db.String(2048))
+    headline = db.Column('headline', db.String(200))
     avatar_url = db.Column('avatar_url', db.String(200))
     voteup_count = db.Column('voteup_count', db.Integer)
     votedown_count = db.Column('votedown_count', db.Integer)
@@ -38,6 +39,18 @@ class User(
     collections = db.relationship(u'Collection', backref='user')
     comments = db.relationship(u'Comment', backref='user')
     questions = db.relationship(u'Question', backref='user')
+
+    _password = db.Column('password', db.String(100), nullable=False)
+
+    def _set_password(self, password):
+        self._password = generate_password_hash(password)
+
+    def _get_password(self):
+        return self._password
+
+    password = db.synonym("_password",
+                          descriptor=property(_get_password,
+                                              _set_password))
 
     op_on_answers = db.relationship(u'Answer', secondary='user_on_answer', backref='op_by_users')
     user_on_answer = db.relationship(u'UserOnAnswer', backref='user')
@@ -65,6 +78,14 @@ class User(
     @staticmethod
     def get_admin():
         return User.query.filter(User.id==1).first_or_404()
+
+    @staticmethod
+    def get_user_by_hashid(hashid):
+        return User.query.filter(User.user_hashid==hashid).first()
+
+    def check_password(self, password):
+        assert self._get_password()
+        return check_password_hash(self._get_password(), password)
 
     def op_on_answer(self, answer, edit=False):
         return self._op_on_x(answer, UserOnAnswer, edit=edit)
@@ -109,7 +130,7 @@ class User(
         return '<%s %r>' % (self.__class__.__name__, self.username)
 
 
-class UserOnAnswer(db.Model):
+class UserOnAnswer(DateTimeMixin, db.Model):
     __tablename__ = 'user_on_answer'
 
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
@@ -120,7 +141,7 @@ class UserOnAnswer(db.Model):
     vote = db.Column('vote', db.Integer)
 
 
-class UserOnCollection(db.Model):
+class UserOnCollection(DateTimeMixin, db.Model):
     __tablename__ = 'user_on_collection'
 
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
@@ -130,7 +151,7 @@ class UserOnCollection(db.Model):
     following = db.Column('following', db.Integer, server_default=db.text("'0'"))
 
 
-class UserOnComment(db.Model):
+class UserOnComment(DateTimeMixin, db.Model):
     __tablename__ = 'user_on_comment'
 
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
@@ -139,7 +160,7 @@ class UserOnComment(db.Model):
     voteup = db.Column('voteup', db.Integer)
 
 
-class UserOnQuestion(db.Model):
+class UserOnQuestion(DateTimeMixin, db.Model):
     __tablename__ = 'user_on_question'
 
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
@@ -148,7 +169,7 @@ class UserOnQuestion(db.Model):
     follow = db.Column('follow', db.Integer)
 
 
-class UserOnTopic(db.Model):
+class UserOnTopic(DateTimeMixin, db.Model):
     __tablename__ = 'user_on_topic'
 
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)

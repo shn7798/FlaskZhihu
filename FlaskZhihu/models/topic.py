@@ -2,14 +2,13 @@
 __author__ = 'shn7798'
 
 from FlaskZhihu.extensions import db
+from FlaskZhihu.models.base import DateTimeMixin
 
 
-class Topic(db.Model):
+class Topic(DateTimeMixin, db.Model):
     __tablename__ = 'topic'
 
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
-    create_time = db.Column('create_time', db.DateTime)
-    update_time = db.Column('update_time', db.DateTime)
     name = db.Column('name', db.String(60))
     description = db.Column('description', db.String(1024))
     avatar_url = db.Column('avatar_url', db.String(200))
@@ -22,7 +21,7 @@ class Topic(db.Model):
 
 
 
-class TopicAndQuestion(db.Model):
+class TopicAndQuestion(DateTimeMixin, db.Model):
     __tablename__ = 'topic_and_question'
 
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)

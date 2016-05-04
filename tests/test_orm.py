@@ -30,7 +30,6 @@ class OrmTestCase(unittest.TestCase):
     def tearDown(self):
         self.db.drop_all()
         self.ctx.pop()
-        print "tearDown"
 
 
     def test_1_create_user(self):
