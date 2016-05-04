@@ -2,6 +2,7 @@
 __author__ = 'shn7798'
 
 from FlaskZhihu.extensions import db
+from .user import UserOnQuestion
 
 
 class Question(db.Model):
@@ -23,3 +24,13 @@ class Question(db.Model):
 
     user_on_question = db.relationship(u'UserOnQuestion', backref='question')
 
+    def following_users(self):
+        uoqs = UserOnQuestion.query.filter(
+            db.and_(UserOnQuestion.question_id == self.id, UserOnQuestion.follow==True)
+        ).all()
+
+        return [uoq.user for uoq in uoqs]
+
+
+    def __repr__(self):
+        return '<%s %r>' % (self.__class__.__name__, self.title)

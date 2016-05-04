@@ -1,0 +1,10 @@
+# -*- coding: utf-8 -*-
+__author__ = 'shn7798'
+
+VOTE_UP = 1
+VOTE_DOWN = -1
+VOTE_NONE = 0
+
+COMMENT_TYPE_QUESTION = 1
+COMMENT_TYPE_ANSWER = 2
+COMMENT_TYPE_COLLECTION = 3

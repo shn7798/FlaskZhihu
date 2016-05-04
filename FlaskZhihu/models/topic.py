@@ -17,6 +17,9 @@ class Topic(db.Model):
     questions = db.relationship(u'Question', secondary='topic_and_question', backref='topics')
     user_on_topic = db.relationship(u'UserOnTopic', backref='topic')
 
+    def __repr__(self):
+        return '<%s %r>' % (self.__class__.__name__, self.name)
+
 
 
 class TopicAndQuestion(db.Model):

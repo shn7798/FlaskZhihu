@@ -2,9 +2,23 @@
 __author__ = 'shn7798'
 
 from FlaskZhihu.extensions import db
+from .operation import *
+
+class UserOnUser(db.Model):
+    __tablename__ = 'user_on_user'
+
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column('user_id', db.ForeignKey(u'user.id'), nullable=False, index=True)
+    dest_user_id = db.Column('dest_user_id', db.ForeignKey(u'user.id'), nullable=False, index=True)
+    follow = db.Column('follow', db.Integer)
+    block = db.Column('block', db.Integer)
 
 
-class User(db.Model):
+class User(
+    UserOperationMixin, QuestionOperationMixin, AnswerOperationMixin, CollectionOperationMixin,
+    CommentOperationMixin,
+    db.Model):
+
     __tablename__ = 'user'
 
     id = db.Column('id', db.Integer, primary_key=True)
@@ -40,12 +54,59 @@ class User(db.Model):
     op_on_topics = db.relationship(u'Topic', secondary='user_on_topic', backref='op_by_users')
     user_on_topic = db.relationship(u'UserOnTopic', backref='user')
 
-    #op_on_users = db.relationship(u'User', secondary='user_on_user', backref='op_by_users')
-    #user_on_user = db.relationship(u'UserOnUser', backref='user')
+    op_on_users = db.relationship(u'User', secondary='user_on_user',
+                                  primaryjoin=id==UserOnUser.user_id,
+                                  secondaryjoin=id==UserOnUser.dest_user_id,
+                                  backref='op_by_users')
+
+    user_on_dest_user = db.relationship(u'UserOnUser', foreign_keys=[UserOnUser.user_id], backref='user')
+    dest_user_on_user = db.relationship(u'UserOnUser', foreign_keys=[UserOnUser.dest_user_id], backref='dest_user')
 
     @staticmethod
     def get_admin():
         return User.query.filter(User.id==1).first_or_404()
+
+    def op_on_answer(self, answer, edit=False):
+        return self._op_on_x(answer, UserOnAnswer, edit=edit)
+
+    def op_on_collection(self, collection, edit=False):
+        return self._op_on_x(collection, UserOnCollection, edit=edit)
+
+    def op_on_comment(self, comment, edit=False):
+        return self._op_on_x(comment, UserOnComment, edit=edit)
+
+    def op_on_question(self, question, edit=False):
+        return self._op_on_x(question, UserOnQuestion, edit=edit)
+
+    def op_on_topic(self, topic, edit=False):
+        return self._op_on_x(topic, UserOnTopic, edit=edit)
+
+    def op_on_user(self, user, edit=False):
+        return self._op_on_x(user, UserOnUser, op_fk=UserOnUser.dest_user_id, one_to_many=self.op_on_users, edit=edit)
+
+    def _op_on_x(self, x_obj, op_table, op_fk=None, one_to_many=None, edit=False):
+        x_name = x_obj.__class__.__name__
+        if not op_fk:
+            op_fk_name = '%s_id' % x_name.lower()
+            op_fk = getattr(op_table, op_fk_name)
+        if not one_to_many:
+            one_to_many_name = 'op_on_%ss' % x_name.lower()
+            one_to_many = getattr(self, one_to_many_name)
+
+        op = op_table.query.filter(
+            db.and_(op_table.user_id == self.id, op_fk == x_obj.id)
+        ).first()
+        if not op:
+            if edit:
+                one_to_many.append(x_obj)
+                return self._op_on_x(x_obj, op_table, op_fk=op_fk, one_to_many=one_to_many)
+            else:
+                return None
+        else:
+            return op
+
+    def __repr__(self):
+        return '<%s %r>' % (self.__class__.__name__, self.username)
 
 
 class UserOnAnswer(db.Model):
@@ -54,13 +115,9 @@ class UserOnAnswer(db.Model):
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     answer_id = db.Column('answer_id', db.ForeignKey(u'answer.id'), nullable=False, index=True)
     user_id = db.Column('user_id', db.ForeignKey(u'user.id'), nullable=False, index=True)
-    # TODO: 思考要不要在每个元素中添加author字段, 元素中已经包含author_id
-    # 是否作者
-    # author = db.Column('author', db.Integer)
     follow = db.Column('follow', db.Integer)
     thank = db.Column('thank', db.Integer)
-    voteup = db.Column('voteup', db.Integer)
-    votedown = db.Column('votedown', db.Integer)
+    vote = db.Column('vote', db.Integer)
 
 
 class UserOnCollection(db.Model):
@@ -99,15 +156,3 @@ class UserOnTopic(db.Model):
     topic_id = db.Column('topic_id', db.ForeignKey(u'topic.id'), nullable=False, index=True)
     follow = db.Column('follow', db.Integer)
 
-
-class UserOnUser(db.Model):
-    __tablename__ = 'user_on_user'
-
-    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
-    user_id = db.Column('user_id', db.ForeignKey(u'user.id'), nullable=False, index=True)
-    dest_user_id = db.Column('dest_user_id', db.ForeignKey(u'user.id'), nullable=False, index=True)
-    follow = db.Column('follow', db.Integer)
-    block = db.Column('block', db.Integer)
-
-    # dest_user = db.relationship(u'User', primaryjoin='UserOnUser.dest_user_id == User.id')
-    # user = db.relationship(u'User', primaryjoin='UserOnUser.user_id == User.id')

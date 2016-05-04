@@ -18,6 +18,9 @@ class Collection(db.Model):
     comments = db.relationship(u'Comment', backref='collections')
     user_on_collection = db.relationship(u'UserOnCollection', backref='collection')
 
+    def __repr__(self):
+        return '<%s %r>' % (self.__class__.__name__, self.title)
+
 
 class CollectionAndAnswer(db.Model):
     __tablename__ = 'collection_and_answer'
