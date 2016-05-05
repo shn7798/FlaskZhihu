@@ -2,10 +2,10 @@
 __author__ = 'shn7798'
 
 from FlaskZhihu.extensions import db
-from FlaskZhihu.models.base import DateTimeMixin
+from FlaskZhihu.models.base import DateTimeMixin, FindByIdMixin
 
 
-class Comment(DateTimeMixin, db.Model):
+class Comment(DateTimeMixin, FindByIdMixin, db.Model):
     __tablename__ = 'comment'
 
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)

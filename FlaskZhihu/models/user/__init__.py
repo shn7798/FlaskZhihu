@@ -2,12 +2,12 @@
 __author__ = 'shn7798'
 
 from FlaskZhihu.extensions import db
-from FlaskZhihu.models.base import DateTimeMixin
+from FlaskZhihu.models.base import DateTimeMixin, FindByIdMixin
 from .operation import *
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
-class UserOnUser(DateTimeMixin, db.Model):
+class UserOnUser(DateTimeMixin, FindByIdMixin, db.Model):
     __tablename__ = 'user_on_user'
 
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
@@ -20,7 +20,7 @@ class UserOnUser(DateTimeMixin, db.Model):
 class User(
     UserOperationMixin, QuestionOperationMixin, AnswerOperationMixin, CollectionOperationMixin,
     CommentOperationMixin,
-    DateTimeMixin, db.Model):
+    DateTimeMixin, FindByIdMixin, db.Model):
 
     __tablename__ = 'user'
 
@@ -76,7 +76,7 @@ class User(
     dest_user_on_user = db.relationship(u'UserOnUser', foreign_keys=[UserOnUser.dest_user_id], backref='dest_user')
 
     @staticmethod
-    def get_admin():
+    def get_admin(cls):
         return User.query.filter(User.id==1).first_or_404()
 
     @staticmethod
@@ -130,7 +130,7 @@ class User(
         return '<%s %r>' % (self.__class__.__name__, self.username)
 
 
-class UserOnAnswer(DateTimeMixin, db.Model):
+class UserOnAnswer(DateTimeMixin, FindByIdMixin, db.Model):
     __tablename__ = 'user_on_answer'
 
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
@@ -141,7 +141,7 @@ class UserOnAnswer(DateTimeMixin, db.Model):
     vote = db.Column('vote', db.Integer)
 
 
-class UserOnCollection(DateTimeMixin, db.Model):
+class UserOnCollection(DateTimeMixin, FindByIdMixin, db.Model):
     __tablename__ = 'user_on_collection'
 
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
@@ -151,7 +151,7 @@ class UserOnCollection(DateTimeMixin, db.Model):
     following = db.Column('following', db.Integer, server_default=db.text("'0'"))
 
 
-class UserOnComment(DateTimeMixin, db.Model):
+class UserOnComment(DateTimeMixin, FindByIdMixin, db.Model):
     __tablename__ = 'user_on_comment'
 
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
@@ -160,7 +160,7 @@ class UserOnComment(DateTimeMixin, db.Model):
     voteup = db.Column('voteup', db.Integer)
 
 
-class UserOnQuestion(DateTimeMixin, db.Model):
+class UserOnQuestion(DateTimeMixin, FindByIdMixin, db.Model):
     __tablename__ = 'user_on_question'
 
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
@@ -169,7 +169,7 @@ class UserOnQuestion(DateTimeMixin, db.Model):
     follow = db.Column('follow', db.Integer)
 
 
-class UserOnTopic(DateTimeMixin, db.Model):
+class UserOnTopic(DateTimeMixin, FindByIdMixin, db.Model):
     __tablename__ = 'user_on_topic'
 
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)

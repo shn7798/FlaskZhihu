@@ -36,6 +36,7 @@ i = 0
 for item in cur:
     d = item['data']
     o = Answer()
+    o.id = d['id']
     o.content = enc(d['content'])
     o.excerpt = enc(d.get('excerpt', ''))
     o.create_time = \
@@ -51,6 +52,11 @@ for item in cur:
     u = User.get_user_by_hashid(o.user_hashid)
     if u:
         o.user = u
+
+    q_id = int(d['question']['id'])
+    q = Question.query.filter(Question.id==q_id).first()
+    if q:
+        o.question = q
 
     mysql.add(o)
 

@@ -2,15 +2,15 @@
 __author__ = 'shn7798'
 
 from FlaskZhihu.extensions import db
-from FlaskZhihu.models.base import DateTimeMixin
+from FlaskZhihu.models.base import DateTimeMixin, FindByIdMixin, blob_unicode
 from FlaskZhihu.models.user import UserOnAnswer
 from FlaskZhihu.constants import VOTE_UP, VOTE_DOWN, VOTE_NONE
 
-class Answer(DateTimeMixin, db.Model):
+
+class Answer(DateTimeMixin, FindByIdMixin, db.Model):
     __tablename__ = 'answer'
 
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
-    content = db.Column('content', db.LargeBinary)
     thanks_count = db.Column('thanks_count', db.Integer)
     excerpt = db.Column('excerpt', db.String(4096))
     user_id = db.Column('user_id', db.ForeignKey(u'user.id'), index=True)
@@ -19,6 +19,9 @@ class Answer(DateTimeMixin, db.Model):
     collection_id = db.Column('collection_id', db.ForeignKey(u'collection.id'), index=True)
 
     user_on_answer = db.relationship(u'UserOnAnswer', backref='answer')
+
+    _content = db.Column('content', db.LargeBinary)
+    content = blob_unicode('_content')
 
     def voteup_count(self):
         return len(self.voteup_users())

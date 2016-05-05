@@ -2,10 +2,10 @@
 __author__ = 'shn7798'
 
 from FlaskZhihu.extensions import db
-from FlaskZhihu.models.base import DateTimeMixin
+from FlaskZhihu.models.base import DateTimeMixin, FindByIdMixin
 
 
-class Collection(DateTimeMixin, db.Model):
+class Collection(DateTimeMixin, FindByIdMixin, db.Model):
     __tablename__ = 'collection'
 
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
@@ -22,7 +22,7 @@ class Collection(DateTimeMixin, db.Model):
         return '<%s %r>' % (self.__class__.__name__, self.title)
 
 
-class CollectionAndAnswer(DateTimeMixin, db.Model):
+class CollectionAndAnswer(DateTimeMixin, FindByIdMixin, db.Model):
     __tablename__ = 'collection_and_answer'
 
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)

@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %} {{ question.title }} {% endblock %}
+{% block body %}
+    title: {{ question.title }}
+<hr>
+    content: {{ question.content|safe }} <BR>
+    answers:<BR>
+    <table border="1">
+    <tbody>
+    {% for answer in question.answers %}
+        <tr>
+        {% if answer.user %}
+            <td width="100"><span>{{ answer.user.name }} {{ answer.user.hashid }}</span></td>
+        {% else %}
+            <td>未知</td>
+        {% endif %}
+        <td><span>{{ answer.content|safe }}</span></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+<hr>
+    <form method="POST" action="{{ url_for('AddAnswerView:post') }}">
+    <input type="hidden" name="question_id" value="{{ question.id }}"/>
+    {{ answer_form.content() }}
+    <input type="submit" value="Submit">
+    </form>
+<hr>
+    random_questions:<BR>
+    {% for q in random_questions %}
+        <a href="{{ url_for('QuestionView:get', id=q.id) }}">{{ q.title }}</a><BR>
+    {% endfor %}
+
+
+{% endblock %}

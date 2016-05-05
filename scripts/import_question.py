@@ -36,6 +36,7 @@ for item in cur:
     d = item['data']
     o = Question()
     o.title = enc(d['title'])
+    o.id = int(d['id'])
     o.excerpt = enc(d.get('excerpt', ''))
     o.content = enc(d['detail'])
     o.user_hashid = enc(d['author']['id'])
