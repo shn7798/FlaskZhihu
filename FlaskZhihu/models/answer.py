@@ -19,6 +19,7 @@ class Answer(DateTimeMixin, FindByIdMixin, db.Model):
     collection_id = db.Column('collection_id', db.ForeignKey(u'collection.id'), index=True)
 
     user_on_answer = db.relationship(u'UserOnAnswer', backref='answer')
+    comments = db.relationship(u'Comment', backref='answer')
 
     _content = db.Column('content', db.LargeBinary)
     content = blob_unicode('_content')

@@ -15,7 +15,7 @@ class Collection(DateTimeMixin, FindByIdMixin, db.Model):
     user_hashid = db.Column('user_hashid', db.String(32))
 
     answers = db.relationship(u'Answer', secondary='collection_and_answer', backref='collections')
-    comments = db.relationship(u'Comment', backref='collections')
+    comments = db.relationship(u'Comment', backref='collection')
     user_on_collection = db.relationship(u'UserOnCollection', backref='collection')
 
     def __repr__(self):

@@ -10,15 +10,15 @@ class Comment(DateTimeMixin, FindByIdMixin, db.Model):
 
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     content = db.Column('content', db.String(4096))
-    comment_type = db.Column('comment_type', db.Integer)
-    user_id = db.Column('user_id', db.ForeignKey(u'user.id'), nullable=False, index=True)
+    comment_target = db.Column('comment_target', db.String(10))
+    user_id = db.Column('user_id', db.ForeignKey(u'user.id'), index=True)
     user_hashid = db.Column('user_hashid', db.String(32))
     voteup = db.Column('voteup', db.Integer)
 
     quote_comment_id = db.Column('quote_comment_id', db.ForeignKey(u'comment.id'), index=True)
-    answer_id = db.Column('answer_id', db.ForeignKey(u'answer.id'), nullable=False, index=True)
-    question_id = db.Column('question_id', db.ForeignKey(u'question.id'), nullable=False, index=True)
-    collection_id = db.Column('collection_id', db.ForeignKey(u'collection.id'), nullable=False, index=True)
+    answer_id = db.Column('answer_id', db.ForeignKey(u'answer.id'), index=True)
+    question_id = db.Column('question_id', db.ForeignKey(u'question.id'), index=True)
+    collection_id = db.Column('collection_id', db.ForeignKey(u'collection.id'), index=True)
 
     user_on_comment = db.relationship(u'UserOnComment', backref='comment')
     reply_comments = db.relationship("Comment",
