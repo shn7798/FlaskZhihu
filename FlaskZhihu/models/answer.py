@@ -5,10 +5,12 @@ from FlaskZhihu.extensions import db
 from FlaskZhihu.models.base import DateTimeMixin, FindByIdMixin, blob_unicode
 from FlaskZhihu.models.user import UserOnAnswer
 from FlaskZhihu.constants import VOTE_UP, VOTE_DOWN, VOTE_NONE, THANK_ON
+from FlaskZhihu.caching_query import CachingQuery
 
 
 class Answer(DateTimeMixin, FindByIdMixin, db.Model):
     __tablename__ = 'answer'
+    query_class = CachingQuery
 
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     thanks_count = db.Column('thanks_count', db.Integer)
@@ -26,11 +28,22 @@ class Answer(DateTimeMixin, FindByIdMixin, db.Model):
 
     @property
     def voteup_count(self):
-        return len(self.voteup_users)
+        return UserOnAnswer.query.filter(
+            db.and_(
+                UserOnAnswer.answer_id == self.id,
+                UserOnAnswer.vote == VOTE_UP,
+            )
+        ).count()
+
 
     @property
     def votedown_count(self):
-        return len(self.votedown_users)
+        return UserOnAnswer.query.filter(
+            db.and_(
+                UserOnAnswer.answer_id == self.id,
+                UserOnAnswer.vote == VOTE_DOWN,
+            )
+        ).count()
 
     @property
     def vote_count(self):

@@ -20,15 +20,19 @@ class UserOperationMixin(object):
         op = self.op_on_user(user, edit=True)
         op.block = False
 
+    @property
     def followed_users(self):
         return [op.dest_user for op in self.user_on_dest_user if op.follow]
 
+    @property
     def who_followed_me(self):
         return [op.user for op in self.dest_user_on_user if op.follow]
 
+    @property
     def blocked_users(self):
         return [op.dest_user for op in self.user_on_dest_user if op.block]
 
+    @property
     def who_blocked_me(self):
         return [op.user for op in self.dest_user_on_user if op.block]
 

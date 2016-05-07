@@ -7,7 +7,7 @@ from flask.ext.login import login_user, login_required, logout_user, current_use
 
 from FlaskZhihu.models import User
 from FlaskZhihu.forms import UserLoginForm, UserAddForm, UserEditForm
-from FlaskZhihu.extensions import db
+from FlaskZhihu.extensions import db, cache
 
 __all__ = ['UserView']
 
@@ -25,7 +25,7 @@ class UserView(FlaskView):
             if user and user.check_password(form.password.data):
                 login_user(user)
 
-                return redirect(form.next_url.data or '/')
+                return redirect(form.next_url.data or request.referrer or '/')
 
         return render_template('user/login.html', form=form)
 
@@ -34,7 +34,7 @@ class UserView(FlaskView):
     @login_required
     def logout(self):
         logout_user()
-        return redirect(request.args.get('next') or '/')
+        return redirect(request.referrer or '/')
 
 
     @route('/add', methods=['GET', 'POST'])
@@ -51,7 +51,7 @@ class UserView(FlaskView):
                     return redirect('/')
             return render_template('user/add.html', form=form)
         else:
-            return redirect('/')
+            return redirect(request.referrer or '/')
 
     @route('/edit', methods=['GET', 'POST'])
     @login_required
@@ -64,6 +64,11 @@ class UserView(FlaskView):
             if form.password.data:
                 user.password = form.password.data
             db.session.commit()
-            return redirect('/')
+        # 不管有没有修改, 都返回上个页面
+            return redirect(request.referrer or '/')
+        else:
+            if request.method.upper() == 'POST':
+                return redirect(request.referrer or '/')
+            else:
+                return render_template('user/edit.html', form=form)
 
-        return render_template('user/edit.html', form=form)

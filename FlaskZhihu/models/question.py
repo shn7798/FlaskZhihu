@@ -4,10 +4,12 @@ __author__ = 'shn7798'
 from FlaskZhihu.extensions import db
 from FlaskZhihu.models.user import UserOnQuestion
 from FlaskZhihu.models.base import DateTimeMixin, FindByIdMixin, blob_unicode
+from FlaskZhihu.caching_query import CachingQuery, RelationshipCache
 
 
 class Question(DateTimeMixin, FindByIdMixin, db.Model):
     __tablename__ = 'question'
+    query_class = CachingQuery
 
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     answers_update_time = db.Column('answers_update_time', db.DateTime)

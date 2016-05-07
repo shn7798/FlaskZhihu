@@ -5,10 +5,12 @@ from FlaskZhihu.models.user import UserOnComment
 from FlaskZhihu.extensions import db
 from FlaskZhihu.models.base import DateTimeMixin, FindByIdMixin
 from FlaskZhihu.constants import VOTE_UP, VOTE_NONE, VOTE_DOWN
+from FlaskZhihu.caching_query import CachingQuery
 
 
 class Comment(DateTimeMixin, FindByIdMixin, db.Model):
     __tablename__ = 'comment'
+    query_class = CachingQuery
 
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     content = db.Column('content', db.String(4096))
@@ -27,7 +29,12 @@ class Comment(DateTimeMixin, FindByIdMixin, db.Model):
 
     @property
     def voteup_count(self):
-        return len(self.voteup_users)
+        return UserOnComment.query.filter(
+            db.and_(
+                UserOnComment.comment_id == self.id,
+                UserOnComment.vote == VOTE_UP,
+            )
+        ).count()
 
     @property
     def voteup_users(self):
