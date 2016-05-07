@@ -50,3 +50,20 @@ class CommentView(FlaskView):
         else:
             print form.data
             abort(404)
+
+    @route(r'/<int:id>/voteup')
+    @login_required
+    def voteup(self, id):
+        comment = Comment.find_by_id(id, abort404=True)
+        current_user.voteup_comment(comment)
+        db.session.commit()
+        return redirect(request.referrer or '/')
+
+
+    @route(r'/<int:id>/cancel_vote')
+    @login_required
+    def cancel_vote(self, id):
+        comment = Comment.find_by_id(id, abort404=True)
+        current_user.voteup_comment(comment, undo=True)
+        db.session.commit()
+        return redirect(request.referrer or '/')

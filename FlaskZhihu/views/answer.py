@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 __author__ = 'shn7798'
-from flask import url_for, abort, redirect, render_template
+from flask import url_for, abort, redirect, render_template, request
 from flask.ext.classy import FlaskView, route
 from flask.ext.login import current_user, login_required
 
 from FlaskZhihu.extensions import db
 from FlaskZhihu.forms import AnswerAddForm
-from FlaskZhihu.models import Answer, Question
+from FlaskZhihu.models import Answer, Question, User
 
 __all__ = ['AnswerView']
 
@@ -39,3 +39,29 @@ class AnswerView(FlaskView):
         answer = Answer.find_by_id(id, abort404=True)
 
         return render_template('answer/show.html', answer=answer)
+
+    @route(r'/<int:id>/voteup')
+    @login_required
+    def voteup(self, id):
+        answer = Answer.find_by_id(id, abort404=True)
+        current_user.voteup_answer(answer)
+        db.session.commit()
+        return redirect(request.referrer or '/')
+
+    @route(r'/<int:id>/votedown')
+    @login_required
+    def votedown(self, id):
+        answer = Answer.find_by_id(id, abort404=True)
+        current_user.votedown_answer(answer)
+        db.session.commit()
+        return redirect(request.referrer or '/')
+
+    @route(r'/<int:id>/cancel_vote')
+    @login_required
+    def cancel_vote(self, id):
+        answer = Answer.find_by_id(id, abort404=True)
+        current_user.voteup_answer(answer, undo=True)
+        current_user.votedown_answer(answer, undo=True)
+        db.session.commit()
+        return redirect(request.referrer or '/')
+

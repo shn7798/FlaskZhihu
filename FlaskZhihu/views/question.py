@@ -14,7 +14,6 @@ class QuestionView(FlaskView):
     route_base = '/question'
 
     @route(r'/')
-    @login_required
     def index(self):
         random_questions = Question.query.order_by(db.func.rand()).limit(20)
         return render_template('question/index.html',

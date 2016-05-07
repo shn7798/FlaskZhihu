@@ -19,6 +19,8 @@
     <tbody>
     {% for comment in answer.comments %}
         <tr>
+            <td><a href="{{ url_for('CommentView:voteup', id=comment.id) }}">赞同({{ comment.voteup_users|length }})</a></td>
+            <td><a href="{{ url_for('CommentView:cancel_vote', id=comment.id) }}">取消意见</a></td>
             <td width="200">{{ comment.create_time }}</td>
             <td width="100">{{ comment.user.name }}</td>
             <td width="300">{{ comment.content }}</td>

@@ -176,7 +176,7 @@ class UserOnComment(DateTimeMixin, FindByIdMixin, db.Model):
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column('user_id', db.ForeignKey(u'user.id'), nullable=False, index=True)
     comment_id = db.Column('comment_id', db.ForeignKey(u'comment.id'), nullable=False, index=True)
-    voteup = db.Column('voteup', db.Integer)
+    vote = db.Column('vote', db.Integer)
 
 
 class UserOnQuestion(DateTimeMixin, FindByIdMixin, db.Model):

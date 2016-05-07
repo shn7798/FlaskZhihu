@@ -26,6 +26,7 @@ class Question(DateTimeMixin, FindByIdMixin, db.Model):
 
     user_on_question = db.relationship(u'UserOnQuestion', backref='question')
 
+    @property
     def following_users(self):
         uoqs = UserOnQuestion.query.filter(
             db.and_(UserOnQuestion.question_id == self.id, UserOnQuestion.follow==True)

@@ -10,6 +10,10 @@
     <tbody>
     {% for answer in question.answers %}
         <tr>
+        <td><a href="{{ url_for('AnswerView:voteup', id=answer.id) }}">赞同({{ answer.voteup_users|length }})</a></td>
+        <td><a href="{{ url_for('AnswerView:votedown', id=answer.id) }}">反对({{ answer.votedown_users|length }})</a></td>
+        <td><a href="{{ url_for('AnswerView:cancel_vote', id=answer.id) }}">取消意见</a></td>
+
         <td width="40"><a href="{{ url_for('AnswerView:show', id=answer.id) }}">详情</a></td>
         {% if answer.user %}
             <td width="100"><span>{{ answer.user.name }} {{ answer.user.hashid }}</span></td>

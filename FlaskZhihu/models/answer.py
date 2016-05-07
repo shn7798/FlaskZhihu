@@ -4,7 +4,7 @@ __author__ = 'shn7798'
 from FlaskZhihu.extensions import db
 from FlaskZhihu.models.base import DateTimeMixin, FindByIdMixin, blob_unicode
 from FlaskZhihu.models.user import UserOnAnswer
-from FlaskZhihu.constants import VOTE_UP, VOTE_DOWN, VOTE_NONE
+from FlaskZhihu.constants import VOTE_UP, VOTE_DOWN, VOTE_NONE, THANK_ON
 
 
 class Answer(DateTimeMixin, FindByIdMixin, db.Model):
@@ -24,15 +24,19 @@ class Answer(DateTimeMixin, FindByIdMixin, db.Model):
     _content = db.Column('content', db.LargeBinary)
     content = blob_unicode('_content')
 
+    @property
     def voteup_count(self):
-        return len(self.voteup_users())
+        return len(self.voteup_users)
 
+    @property
     def votedown_count(self):
-        return len(self.votedown_users())
+        return len(self.votedown_users)
 
+    @property
     def vote_count(self):
-        return self.voteup_count() - self.votedown_count()
+        return self.voteup_count - self.votedown_count
 
+    @property
     def voteup_users(self):
         ops = UserOnAnswer.query.filter(
             db.and_(
@@ -43,6 +47,7 @@ class Answer(DateTimeMixin, FindByIdMixin, db.Model):
 
         return [op.user for op in ops]
 
+    @property
     def votedown_users(self):
         ops = UserOnAnswer.query.filter(
             db.and_(
@@ -53,11 +58,12 @@ class Answer(DateTimeMixin, FindByIdMixin, db.Model):
 
         return [op.user for op in ops]
 
+    @property
     def thanked_users(self):
         ops = UserOnAnswer.query.filter(
             db.and_(
                 UserOnAnswer.answer_id == self.id,
-                UserOnAnswer.thank == 1,
+                UserOnAnswer.thank == THANK_ON,
             )
         ).all()
         return [op.user for op in ops]

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 __author__ = 'shn7798'
 
-from FlaskZhihu.constants import VOTE_NONE, VOTE_UP, VOTE_DOWN
+from FlaskZhihu.constants import VOTE_NONE, VOTE_UP, VOTE_DOWN, THANK_OFF, THANK_ON
 
 class AnswerOperationMixin(object):
     def add_answer(self, answer):
@@ -15,33 +15,25 @@ class AnswerOperationMixin(object):
 
     def voteup_answer(self, answer, undo=False):
         op = self.op_on_answer(answer, edit=True)
-
-        if op.vote == VOTE_UP:
-            if undo:
+        if undo:
+            if op.vote == VOTE_UP:
                 op.vote = VOTE_NONE
-            else:
-                pass
-        elif op.vote == VOTE_DOWN:
-            op.vote = VOTE_UP
         else:
             op.vote = VOTE_UP
 
+
     def votedown_answer(self, answer, undo=False):
         op = self.op_on_answer(answer, edit=True)
-        if op.vote == VOTE_DOWN:
-            if undo:
+        if undo:
+            if op.vote == VOTE_DOWN:
                 op.vote = VOTE_NONE
-            else:
-                pass
-        elif op.vote == VOTE_UP:
-            op.vote = VOTE_DOWN
         else:
             op.vote = VOTE_DOWN
 
     def thank_answer(self, answer):
         op = self.op_on_answer(answer, edit=True)
-        op.thank = True
+        op.thank = THANK_ON
 
     def unthank_answer(self, answer):
         op = self.op_on_answer(answer, edit=True)
-        op.thank = False
+        op.thank = THANK_OFF
