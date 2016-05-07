@@ -3,10 +3,12 @@ __author__ = 'shn7798'
 
 from FlaskZhihu.extensions import db
 from FlaskZhihu.models.base import DateTimeMixin, FindByIdMixin
+from flask.ext.sqlalchemy_cache import CachingQuery
 
 
 class Collection(DateTimeMixin, FindByIdMixin, db.Model):
     __tablename__ = 'collection'
+    query_class = CachingQuery
 
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     title = db.Column('title', db.String(60))

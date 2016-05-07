@@ -3,9 +3,13 @@ __author__ = 'shn7798'
 
 from flask import Flask
 
-from FlaskZhihu.settings import TestSettings
+from FlaskZhihu.settings import IPythonSettings
 from FlaskZhihu.models import *
-from FlaskZhihu.extensions import db
+from FlaskZhihu.extensions import db, cache
+from FlaskZhihu.application import create_app
+from flask.ext.sqlalchemy_cache import FromCache
+from flask.ext.sqlalchemy import get_debug_queries, get_state
+
 
 Base = db.Model
 Column = db.Column
@@ -113,9 +117,7 @@ def init(db):
 
 
 if __name__ == '__main__':
-        app = Flask(__name__)
-        app.config.from_object(TestSettings())
-        db.init_app(app)
+        app = create_app(IPythonSettings())
 
         ctx = app.app_context()
 
