@@ -39,7 +39,6 @@ for item in cur:
     o.id = d['id']
     o.content = enc(d['content'])
     o.excerpt = enc(d.get('excerpt', ''))
-    o.create_time = \
     create_time = d.get('created_time', None)
     if create_time:
         o.create_time = datetime.datetime.fromtimestamp(create_time)
@@ -48,15 +47,15 @@ for item in cur:
         o.update_time = datetime.datetime.fromtimestamp(update_time)
 
     o.user_hashid = enc(d['author']['id'])
-
     u = User.get_user_by_hashid(o.user_hashid)
     if u:
         o.user = u
 
     q_id = int(d['question']['id'])
-    q = Question.query.filter(Question.id==q_id).first()
-    if q:
-        o.question = q
+    o.question_id = q_id
+    # q = Question.query.filter(Question.id==q_id).first()
+    # if q:
+    #     o.question = q
 
     mysql.add(o)
 

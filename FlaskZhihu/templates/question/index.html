@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}  随机问题浏览 {% endblock %}
 {% block body %}
-<hr>
+{% include 'user/_user_banner.html' %}
     random_questions:<BR>
     {% for q in random_questions %}
         <a href="{{ url_for('QuestionView:show', id=q.id) }}">{{ q.title }} ({{ q.answers|length }})</a><BR>

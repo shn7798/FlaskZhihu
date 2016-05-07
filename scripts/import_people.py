@@ -41,6 +41,7 @@ for people in cur:
     u.headline = enc(p['headline'])
     u.description = enc(p['description'])
     u.user_hashid = p['id']
+    u.gender = p['gender']
 
     mysql.add(u)
 

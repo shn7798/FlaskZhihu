@@ -1,0 +1,5 @@
+{% block user_banner %}
+欢迎你: {{ current_user.username }}
+<a href="{{ url_for('UserView:logout') }}">退出</a>
+<hr>
+{% endblock %}

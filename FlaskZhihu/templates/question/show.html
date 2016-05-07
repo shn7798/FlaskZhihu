@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block title %} {{ question.title }} {% endblock %}
 {% block body %}
+{% include 'user/_user_banner.html' %}
     title: {{ question.title }}
 <hr>
     content: {{ question.content|safe }} <BR>

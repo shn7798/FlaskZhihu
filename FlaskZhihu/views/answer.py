@@ -7,6 +7,8 @@ from FlaskZhihu.extensions import db
 from FlaskZhihu.forms.answer import AnswerForm
 from FlaskZhihu.models import Answer, Question
 
+__all__ = ['AnswerView']
+
 
 class AnswerView(FlaskView):
     route_base = '/answer'

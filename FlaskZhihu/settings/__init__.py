@@ -6,6 +6,7 @@ class DefaultSettings(object):
     SQLALCHEMY_DATABASE_URI = "mysql://flaskzhihu:123456@192.168.5.202/flaskzhihu?charset=UTF-8"
     SQLALCHEMY_ECHO = False
     SQLALCHEMY_TRACK_MODIFICATIONS = True
+    SECRET_KEY = "asasasasas"
 
 
 class TestSettings(object):
@@ -14,3 +15,4 @@ class TestSettings(object):
     SQLALCHEMY_ECHO = False
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     WTF_CSRF_ENABLED = False
+    SECRET_KEY = "asasasasas"

@@ -17,16 +17,35 @@ class UserOnUser(DateTimeMixin, FindByIdMixin, db.Model):
     block = db.Column('block', db.Integer)
 
 
+class UserLoginMixin():
+    @property
+    def is_authenticated(self):
+        return True
+
+    @property
+    def is_active(self):
+        return True
+
+    @property
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return self.id
+
+
 class User(
     UserOperationMixin, QuestionOperationMixin, AnswerOperationMixin, CollectionOperationMixin,
     CommentOperationMixin,
-    DateTimeMixin, FindByIdMixin, db.Model):
+    DateTimeMixin, FindByIdMixin,
+    UserLoginMixin,
+    db.Model):
 
     __tablename__ = 'user'
 
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     user_hashid = db.Column('user_hashid', db.String(32))
-    username = db.Column('username', db.String(45))
+    username = db.Column('username', db.String(45), unique=True)
     name = db.Column('name', db.String(45))
     gender = db.Column('gender', db.Integer)
     description = db.Column('description', db.String(2048))

@@ -2,17 +2,20 @@
 __author__ = 'shn7798'
 from flask import url_for, abort, redirect, render_template
 from flask.ext.classy import FlaskView, route, request
+from flask.ext.login import current_user, login_required
 
 from FlaskZhihu.extensions import db
-from FlaskZhihu.forms.answer import AnswerForm
 from FlaskZhihu.forms.comment import CommentForm
 from FlaskZhihu.models import Answer, Question, Comment, Collection, User
+
+__all__ = ['CommentView']
 
 
 class CommentView(FlaskView):
     route_base = '/comment'
 
     @route(r'/add', methods=['POST'])
+    @login_required
     def add(self):
         form = CommentForm()
         if form.validate_on_submit():
@@ -21,13 +24,9 @@ class CommentView(FlaskView):
             target_type = str(data['target_type'])
             target_id = str(data['target_id'])
 
-            # current user not readly
-            # user_id = str(data['user_id'])
-            # user = User.find_by_id(user_id, abort404=True)
-
             comment = Comment()
+            comment.user = current_user
             comment.content = data['content']
-            # comment.user = user
             comment.comment_target = target_type
             if target_type == 'answer':
                 comment.answer = Answer.find_by_id(target_id, abort404=True)

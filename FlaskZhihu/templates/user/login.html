@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %} 登录 {% endblock %}
+{% block body %}
+    <form method="POST" action="{{ url_for('UserView:login') }}">
+    {{ form.next_url }}
+    <ul>
+        <li>
+            {{ form.username.label }}
+            {{ form.username }}
+        </li>
+        <li>
+            {{ form.password.label }}
+            {{ form.password }}
+        </li>
+        <li>
+            <input type="submit" value="Submit">
+        </li>
+    </ul>
+    </form>
+
+
+{% endblock %}

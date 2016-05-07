@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 {% block title %} {{ answer.user.name }} 的回答 {% endblock %}
 {% block body %}
+{% include 'user/_user_banner.html' %}
     作者: {{ answer.user.name }}
 <hr>
     content: {{ answer.content|safe }} <BR>
 
 <hr>
     <form method="POST" action="{{ url_for('CommentView:add') }}">
-    <input type="hidden" name="user_id" value="{{ answer.user_id }}"/>
     <input type="hidden" name="target_type" value="answer"/>
     <input type="hidden" name="target_id" value="{{ answer.id }}"/>
     <textarea name="content"></textarea>
@@ -19,8 +19,10 @@
     <tbody>
     {% for comment in answer.comments %}
         <tr>
-            <td width="100" >{{ comment.user.name }}</td>
-            <td width="300" >{{ comment.content }}</td>
+            <td width="200">{{ comment.create_time }}</td>
+            <td width="100">{{ comment.user.name }}</td>
+            <td width="300">{{ comment.content }}</td>
+
         </tr>
     {% endfor %}
     </tbody>
