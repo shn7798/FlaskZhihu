@@ -6,8 +6,6 @@ from flask.ext.classy import FlaskView, route
 from flask.ext.login import login_required
 
 from FlaskZhihu.models.question import *
-from FlaskZhihu.forms.answer import AnswerForm
-
 
 __all__ = ['QuestionView']
 
@@ -27,5 +25,4 @@ class QuestionView(FlaskView):
         question = Question.query.filter(Question.id==int(id)).first_or_404()
         random_questions = Question.query.order_by(db.func.rand()).limit(20)
         return render_template('question/show.html', question=question,
-                               random_questions=random_questions,
-                               answer_form=AnswerForm())
+                               random_questions=random_questions)

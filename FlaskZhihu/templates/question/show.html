@@ -24,7 +24,7 @@
 <hr>
     <form method="POST" action="{{ url_for('AnswerView:add') }}">
     <input type="hidden" name="question_id" value="{{ question.id }}"/>
-    {{ answer_form.content() }}
+    <textarea name="content"></textarea>
     <input type="submit" value="Submit">
     </form>
 <hr>

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %} 修改 {% endblock %}
+{% block body %}
+    <form method="POST" action="{{ url_for('UserView:edit') }}">
+    <ul>
+        <li>
+            {{ form.name.label }}
+            {{ form.name }}
+        </li>
+        <li>
+            {{ form.password.label }}
+            {{ form.password }}
+        </li>
+        <li>
+            <input type="submit" value="提交修改">
+        </li>
+    </ul>
+    </form>
+
+
+{% endblock %}

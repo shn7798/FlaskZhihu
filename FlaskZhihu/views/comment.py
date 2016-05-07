@@ -5,7 +5,7 @@ from flask.ext.classy import FlaskView, route, request
 from flask.ext.login import current_user, login_required
 
 from FlaskZhihu.extensions import db
-from FlaskZhihu.forms.comment import CommentForm
+from FlaskZhihu.forms import CommentAddForm
 from FlaskZhihu.models import Answer, Question, Comment, Collection, User
 
 __all__ = ['CommentView']
@@ -17,7 +17,7 @@ class CommentView(FlaskView):
     @route(r'/add', methods=['POST'])
     @login_required
     def add(self):
-        form = CommentForm()
+        form = CommentAddForm()
         if form.validate_on_submit():
             data = form.data
             print data

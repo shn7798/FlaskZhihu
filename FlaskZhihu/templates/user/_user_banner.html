@@ -1,5 +1,7 @@
 {% block user_banner %}
-欢迎你: {{ current_user.username }}
+欢迎你: {{ current_user.name }}({{ current_user.username }})
+<a href="{{ url_for('UserView:edit') }}">修改资料</a> |
 <a href="{{ url_for('UserView:logout') }}">退出</a>
+
 <hr>
 {% endblock %}

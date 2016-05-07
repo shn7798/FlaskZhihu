@@ -3,10 +3,11 @@ __author__ = 'shn7798'
 
 from flask import abort, render_template, redirect, request
 from flask.ext.classy import FlaskView, route
-from flask.ext.login import login_user, login_required, logout_user
+from flask.ext.login import login_user, login_required, logout_user, current_user
 
 from FlaskZhihu.models import User
-from FlaskZhihu.forms.user import LoginForm
+from FlaskZhihu.forms import UserLoginForm, UserAddForm, UserEditForm
+from FlaskZhihu.extensions import db
 
 __all__ = ['UserView']
 
@@ -15,7 +16,7 @@ class UserView(FlaskView):
 
     @route('/login', methods=['GET', 'POST'])
     def login(self):
-        form = LoginForm()
+        form = UserLoginForm()
         if not form.next_url.data:
             form.next_url.data = request.args.get('next', None)
 
@@ -36,10 +37,33 @@ class UserView(FlaskView):
         return redirect(request.args.get('next') or '/')
 
 
-    @route('/add')
+    @route('/add', methods=['GET', 'POST'])
     def add(self):
-        pass
+        if current_user.is_anonymous:
+            form = UserAddForm()
+            if form.validate_on_submit():
+                if User.query.filter(User.username==form.username.data).count() == 0:
+                    user = User()
+                    user.username = form.username.data
+                    user.password = form.password.data
+                    db.session.add(user)
+                    db.session.commit()
+                    return redirect('/')
+            return render_template('user/add.html', form=form)
+        else:
+            return redirect('/')
 
-    @route('/edit')
+    @route('/edit', methods=['GET', 'POST'])
+    @login_required
     def edit(self):
-        pass
+        form = UserEditForm()
+        if form.validate_on_submit():
+            user = current_user
+            if form.name.data:
+                user.name = form.name.data
+            if form.password.data:
+                user.password = form.password.data
+            db.session.commit()
+            return redirect('/')
+
+        return render_template('user/edit.html', form=form)

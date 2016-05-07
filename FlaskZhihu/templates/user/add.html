@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
-{% block title %} 登录 {% endblock %}
+{% block title %} 注册 {% endblock %}
 {% block body %}
-    <form method="POST" action="{{ url_for('UserView:login') }}">
-    {{ form.next_url }}
+    <form method="POST" action="{{ url_for('UserView:add') }}">
     <ul>
         <li>
             {{ form.username.label }}
@@ -13,8 +12,7 @@
             {{ form.password }}
         </li>
         <li>
-            <input type="submit" value="登录">
-            <a href="{{ url_for('UserView:add') }}">注册</a>
+            <input type="submit" value="注册">
         </li>
     </ul>
     </form>

@@ -5,7 +5,9 @@ from flask.ext.wtf import Form
 from wtforms import TextAreaField, SubmitField, HiddenField
 from wtforms.validators import required
 
+__all__ = ['AnswerAddForm']
 
-class AnswerForm(Form):
+
+class AnswerAddForm(Form):
     question_id = HiddenField(validators=[required()])
     content = TextAreaField(validators=[required(message=u'请输入内容')])
