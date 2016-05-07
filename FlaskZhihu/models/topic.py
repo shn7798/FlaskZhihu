@@ -3,7 +3,7 @@ __author__ = 'shn7798'
 
 from FlaskZhihu.extensions import db
 from FlaskZhihu.models.base import DateTimeMixin, FindByIdMixin
-from FlaskZhihu.caching_query import CachingQuery
+from flask.ext.sqlalchemy_cache import CachingQuery
 
 
 class Topic(DateTimeMixin, FindByIdMixin, db.Model):

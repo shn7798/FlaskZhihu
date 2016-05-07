@@ -5,7 +5,6 @@ from FlaskZhihu.settings import DefaultSettings
 from FlaskZhihu.extensions import db, cache
 from FlaskZhihu.views.index import index
 from FlaskZhihu.views import QuestionView, AnswerView, CommentView, UserView
-from FlaskZhihu.views.question import question
 from FlaskZhihu.permissions import login_manager
 
 def create_app(settings=None):
@@ -29,8 +28,7 @@ def init_extensions(app):
 
 def init_views(app):
     app.register_blueprint(index)
-    #QuestionView.register(app)
-    app.register_blueprint(question)
+    QuestionView.register(app)
     AnswerView.register(app)
     CommentView.register(app)
     UserView.register(app)

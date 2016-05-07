@@ -5,7 +5,7 @@ from FlaskZhihu.extensions import db
 from FlaskZhihu.models.base import DateTimeMixin, FindByIdMixin
 from .operation import *
 from werkzeug.security import generate_password_hash, check_password_hash
-from FlaskZhihu.caching_query import CachingQuery
+from flask.ext.sqlalchemy_cache import CachingQuery
 
 
 class UserOnUser(DateTimeMixin, FindByIdMixin, db.Model):

@@ -5,7 +5,7 @@ from FlaskZhihu.models.user import UserOnComment
 from FlaskZhihu.extensions import db
 from FlaskZhihu.models.base import DateTimeMixin, FindByIdMixin
 from FlaskZhihu.constants import VOTE_UP, VOTE_NONE, VOTE_DOWN
-from FlaskZhihu.caching_query import CachingQuery
+from flask.ext.sqlalchemy_cache import CachingQuery
 
 
 class Comment(DateTimeMixin, FindByIdMixin, db.Model):

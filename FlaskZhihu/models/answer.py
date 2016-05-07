@@ -5,7 +5,7 @@ from FlaskZhihu.extensions import db
 from FlaskZhihu.models.base import DateTimeMixin, FindByIdMixin, blob_unicode
 from FlaskZhihu.models.user import UserOnAnswer
 from FlaskZhihu.constants import VOTE_UP, VOTE_DOWN, VOTE_NONE, THANK_ON
-from FlaskZhihu.caching_query import CachingQuery
+from flask.ext.sqlalchemy_cache import CachingQuery
 
 
 class Answer(DateTimeMixin, FindByIdMixin, db.Model):

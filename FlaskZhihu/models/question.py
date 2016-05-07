@@ -4,7 +4,7 @@ __author__ = 'shn7798'
 from FlaskZhihu.extensions import db
 from FlaskZhihu.models.user import UserOnQuestion
 from FlaskZhihu.models.base import DateTimeMixin, FindByIdMixin, blob_unicode
-from FlaskZhihu.caching_query import CachingQuery, RelationshipCache
+from flask.ext.sqlalchemy_cache import CachingQuery
 
 
 class Question(DateTimeMixin, FindByIdMixin, db.Model):
