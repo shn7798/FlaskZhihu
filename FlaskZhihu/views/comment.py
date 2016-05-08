@@ -7,6 +7,7 @@ from flask.ext.login import current_user, login_required
 from FlaskZhihu.extensions import db
 from FlaskZhihu.forms import CommentAddForm
 from FlaskZhihu.models import Answer, Question, Comment, Collection, User
+from FlaskZhihu.signals import *
 
 __all__ = ['CommentView']
 
@@ -30,18 +31,31 @@ class CommentView(FlaskView):
             comment.comment_target = target_type
             if target_type == 'answer':
                 comment.answer = Answer.find_by_id(target_id, abort404=True)
+
+                answer_comment_add.send(comment.answer)
+
+                db.session.add(comment)
+                db.session.commit()
             elif target_type == 'question':
                 comment.question = Question.find_by_id(target_id, abort404=True)
+
+                question_comment_add.send(comment.question)
+
+                db.session.add(comment)
+                db.session.commit()
             elif target_type == 'collection':
                 comment.collection = Collection.find_by_id(target_id, abort404=True)
+
+                #collection_comment_add.send(comment.collection)
+
+                db.session.add(comment)
+                db.session.commit()
             elif target_type == 'comment':
                 comment.quote_comment = Comment.find_by_id(target_id, abort404=True)
+                db.session.add(comment)
+                db.session.commit()
             else:
                 abort(500)
-
-            db.session.add(comment)
-            db.session.commit()
-
 
             if request.referrer:
                 return redirect(request.referrer)
@@ -57,6 +71,9 @@ class CommentView(FlaskView):
         comment = Comment.find_by_id(id, abort404=True)
         current_user.voteup_comment(comment)
         db.session.commit()
+
+        comment_voteup.send(comment)
+
         return redirect(request.referrer or '/')
 
 
@@ -66,4 +83,7 @@ class CommentView(FlaskView):
         comment = Comment.find_by_id(id, abort404=True)
         current_user.voteup_comment(comment, undo=True)
         db.session.commit()
+
+        comment_cancel_vote.send(comment)
+
         return redirect(request.referrer or '/')

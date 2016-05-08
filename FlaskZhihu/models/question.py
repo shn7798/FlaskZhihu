@@ -16,6 +16,14 @@ class Question(DateTimeMixin, FindByIdMixin, db.Model):
     title = db.Column('title', db.String(500))
     excerpt = db.Column('excerpt', db.String(4096))
     answer_ids = db.Column('answer_ids', db.Integer)
+
+    # count cache
+    voteup_count = db.Column('voteup_count', db.Integer, server_default='0')
+    votedown_count = db.Column('votedown_count', db.Integer, server_default='0')
+    answers_count = db.Column('answers_count', db.Integer, server_default='0')
+    following_count = db.Column('following_count', db.Integer, server_default='0')
+    comments_count = db.Column('comments_count', db.Integer, server_default='0')
+
     status = db.Column('status', db.String(45))
     user_id = db.Column('user_id', db.ForeignKey(u'user.id'), index=True)
     user_hashid = db.Column('user_hashid', db.String(32))

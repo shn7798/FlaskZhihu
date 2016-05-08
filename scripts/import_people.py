@@ -32,11 +32,15 @@ i = 0
 for people in cur:
     p = people['data']
 
+
     u = User()
     u.hashid = p['id']
     u.name = enc(p['name'])
     u.password = '123456'
-    u.username = enc(p['name'])
+    if User.query.filter(User.username == enc(p['name'])).count():
+        u.username = enc(u'%s_%s' % (p['name'] ,u.hashid))
+    else:
+        u.username = enc(p['name'])
     u.avatar_url = enc(p['avatar_url'])
     u.headline = enc(p['headline'])
     u.description = enc(p['description'])

@@ -10,8 +10,8 @@
     <tbody>
     {% for answer in answers %}
         <tr>
-        <td><a href="{{ url_for('AnswerView:voteup', id=answer.id) }}">赞同({{ answer.voteup_users|length }})</a></td>
-        <td><a href="{{ url_for('AnswerView:votedown', id=answer.id) }}">反对({{ answer.votedown_users|length }})</a></td>
+        <td><a href="{{ url_for('AnswerView:voteup', id=answer.id) }}">赞同({{ answer.voteup_count }})</a></td>
+        <td><a href="{{ url_for('AnswerView:votedown', id=answer.id) }}">反对({{ answer.votedown_count }})</a></td>
         <td><a href="{{ url_for('AnswerView:cancel_vote', id=answer.id) }}">取消意见</a></td>
 
         <td width="40"><a href="{{ url_for('AnswerView:show', id=answer.id) }}">详情</a></td>
@@ -34,7 +34,7 @@
 <hr>
     random_questions:<BR>
     {% for q in random_questions %}
-        <a href="{{ url_for('QuestionView:show', id=q.id) }}">{{ q.title }} ({{ q.answers|length }})</a><BR>
+        <a href="{{ url_for('QuestionView:show', id=q.id) }}">{{ q.title }} ({{ q.answers_count }})</a><BR>
     {% endfor %}
 
 

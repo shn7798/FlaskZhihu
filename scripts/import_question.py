@@ -40,6 +40,7 @@ for item in cur:
     o.excerpt = enc(d.get('excerpt', ''))
     o.content = enc(d['detail'])
     o.user_hashid = enc(d['author']['id'])
+    o.answers_count = Answer.query.filter(Answer.question_id == o.id).count()
 
     u = User.get_user_by_hashid(o.user_hashid)
     if u:

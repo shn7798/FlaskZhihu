@@ -4,6 +4,10 @@
     <form method="POST" action="{{ url_for('UserView:add') }}">
     <ul>
         <li>
+            {{ form.name.label }}
+            {{ form.name }}
+        </li>
+        <li>
             {{ form.username.label }}
             {{ form.username }}
         </li>

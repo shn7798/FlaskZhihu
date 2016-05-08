@@ -26,24 +26,12 @@ class Answer(DateTimeMixin, FindByIdMixin, db.Model):
     _content = db.Column('content', db.LargeBinary)
     content = blob_unicode('_content')
 
-    @property
-    def voteup_count(self):
-        return UserOnAnswer.query.filter(
-            db.and_(
-                UserOnAnswer.answer_id == self.id,
-                UserOnAnswer.vote == VOTE_UP,
-            )
-        ).count()
+    # count cache
+    comments_count = db.Column('comments_count', db.Integer, server_default='0')
+    voteup_count = db.Column('voteup_count', db.Integer, server_default='0')
+    votedown_count = db.Column('votedown_count', db.Integer, server_default='0')
 
 
-    @property
-    def votedown_count(self):
-        return UserOnAnswer.query.filter(
-            db.and_(
-                UserOnAnswer.answer_id == self.id,
-                UserOnAnswer.vote == VOTE_DOWN,
-            )
-        ).count()
 
     @property
     def vote_count(self):

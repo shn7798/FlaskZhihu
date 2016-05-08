@@ -27,14 +27,8 @@ class Comment(DateTimeMixin, FindByIdMixin, db.Model):
     reply_comments = db.relationship("Comment",
                             backref=db.backref('quote_comment', remote_side=[id]))
 
-    @property
-    def voteup_count(self):
-        return UserOnComment.query.filter(
-            db.and_(
-                UserOnComment.comment_id == self.id,
-                UserOnComment.vote == VOTE_UP,
-            )
-        ).count()
+    # count cache
+    voteup_count = db.Column('voteup_count', db.Integer, server_default='0')
 
     @property
     def voteup_users(self):

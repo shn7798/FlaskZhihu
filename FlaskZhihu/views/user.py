@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 __author__ = 'shn7798'
 
-from flask import abort, render_template, redirect, request
+from flask import abort, render_template, redirect, request, url_for
 from flask.ext.classy import FlaskView, route
 from flask.ext.login import login_user, login_required, logout_user, current_user
 
@@ -44,11 +44,12 @@ class UserView(FlaskView):
             if form.validate_on_submit():
                 if User.query.filter(User.username==form.username.data).count() == 0:
                     user = User()
+                    user.name = form.name.data
                     user.username = form.username.data
                     user.password = form.password.data
                     db.session.add(user)
                     db.session.commit()
-                    return redirect('/')
+                    return redirect(url_for('UserView:login'))
             return render_template('user/add.html', form=form)
         else:
             return redirect(request.referrer or '/')

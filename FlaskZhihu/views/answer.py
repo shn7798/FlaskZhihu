@@ -7,6 +7,7 @@ from flask.ext.login import current_user, login_required
 from FlaskZhihu.extensions import db
 from FlaskZhihu.forms import AnswerAddForm
 from FlaskZhihu.models import Answer, Question, User
+from FlaskZhihu.signals import *
 
 __all__ = ['AnswerView']
 
@@ -29,6 +30,8 @@ class AnswerView(FlaskView):
             db.session.add(answer)
             db.session.commit()
 
+            question_answer_add.send(question)
+
         if form.question_id.data:
             return redirect(url_for('QuestionView:show', id=str(form.question_id.data)))
         else:
@@ -46,6 +49,9 @@ class AnswerView(FlaskView):
         answer = Answer.find_by_id(id, abort404=True)
         current_user.voteup_answer(answer)
         db.session.commit()
+
+        answer_voteup.send(answer)
+
         return redirect(request.referrer or '/')
 
     @route(r'/<int:id>/votedown')
@@ -54,6 +60,9 @@ class AnswerView(FlaskView):
         answer = Answer.find_by_id(id, abort404=True)
         current_user.votedown_answer(answer)
         db.session.commit()
+
+        answer_votedown.send(answer)
+
         return redirect(request.referrer or '/')
 
     @route(r'/<int:id>/cancel_vote')
@@ -63,5 +72,8 @@ class AnswerView(FlaskView):
         current_user.voteup_answer(answer, undo=True)
         current_user.votedown_answer(answer, undo=True)
         db.session.commit()
+
+        answer_cancel_vote.send(answer)
+
         return redirect(request.referrer or '/')
 

@@ -28,12 +28,16 @@ class IPythonSettings(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     WTF_CSRF_ENABLED = False
     SECRET_KEY = "asasasasas"
-    CACHE_TYPE = "simple"
-    CACHE_DEFAULT_TIMEOUT = 600
+    #CACHE_TYPE = "simple"
+    #CACHE_DEFAULT_TIMEOUT = 600
     SQLALCHEMY_RECORD_QUERIES = True
 
-class RedisCacheSettings(TestSettings):
     CACHE_TYPE = 'redis'
 
     CACHE_REDIS_HOST = '127.0.0.1'
     CACHE_KEY_PREFIX = 'flask_'
+
+
+class DeploySettings(IPythonSettings):
+    SQLALCHEMY_DATABASE_URI = "mysql://flaskzhihu:123456@192.168.5.202/flaskzhihu?charset=utf8"
+

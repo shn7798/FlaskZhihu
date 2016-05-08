@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 from FlaskZhihu.application import create_app
-from FlaskZhihu.settings import TestSettings, RedisCacheSettings
+from FlaskZhihu.settings import TestSettings, IPythonSettings
 if __name__ == '__main__':
-    #settings = TestSettings()
-    settings = RedisCacheSettings()
+    settings = IPythonSettings()
     app = create_app(settings=settings)
     app.run()

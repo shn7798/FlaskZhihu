@@ -6,6 +6,7 @@ from FlaskZhihu.extensions import db, cache
 from FlaskZhihu.views.index import index
 from FlaskZhihu.views import QuestionView, AnswerView, CommentView, UserView
 from FlaskZhihu.permissions import login_manager
+from FlaskZhihu.models.signals import register_signals
 
 def create_app(settings=None):
     if not settings:
@@ -18,6 +19,7 @@ def create_app(settings=None):
 
     init_extensions(app)
     init_views(app)
+    register_signals()
     return app
 
 

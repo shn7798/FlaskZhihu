@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 __author__ = 'shn7798'
 
+import random
+
 from flask import abort, render_template, current_app
 
 from flask.ext.classy import FlaskView, route
@@ -30,10 +32,17 @@ class QuestionView(FlaskView):
 
     @route(r'/<int:id>')
     def show(self, id):
-        question = Question.query.options(FromCache(cache)).filter(Question.id == int(id)).first_or_404()
-        answers = Answer.query.options(FromCache(cache)).filter(Answer.question_id == int(question.id)).all()
-        random_questions = Question.query.options(FromCache(cache)).order_by(db.func.rand()).limit(20)
-        #random_questions = Question.query.limit(20)
+        question = Question.query.filter(Question.id == int(id)).first_or_404()
+        # .join(Answer.user_id == User.id)\
+        answers = Answer.query\
+            .options(db.joinedload('user'))\
+            .filter(Answer.question_id == int(question.id)) \
+            .all()
+
+        limit = 20
+        offset = random.randint(0, Question.query.count()-limit)
+        random_questions = Question.query.offset(offset).limit(limit)
+        random_questions = sorted(random_questions, key=lambda x:x.answers_count, reverse=True)
         response = render_template('question/show.html',
                                    question=question, answers=answers,
                                    random_questions=random_questions)
