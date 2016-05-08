@@ -1,9 +1,10 @@
 {% block user_banner %}
+<a href="/">首页</a>
 {% if current_user.is_anonymous %}
-    <a href="{{ url_for('UserView:login') }}">登录</a>
+    |<a href="{{ url_for('UserView:login') }}">登录</a>
     |<a href="{{ url_for('QuestionView:add') }}">提问</a>
 {% else %}
-    欢迎你: {{ current_user.name }}({{ current_user.username }})
+    |欢迎你: {{ current_user.name }}({{ current_user.username }})
     |<a href="{{ url_for('QuestionView:add') }}">提问</a>
     |<a href="{{ url_for('QuestionView:my') }}">我的提问</a>
     |<a href="{{ url_for('AnswerView:my') }}">我的回答</a>

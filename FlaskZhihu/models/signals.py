@@ -5,8 +5,9 @@ from FlaskZhihu.extensions import db
 from FlaskZhihu.models import *
 from FlaskZhihu.constants import *
 from FlaskZhihu.signals import *
+from FlaskZhihu.helpers import use_signal
 
-
+@use_signal(question_answer_add)
 def update_question_answers_count(sender):
     assert isinstance(sender, Question)
     sender.answers_count = \
@@ -14,6 +15,8 @@ def update_question_answers_count(sender):
 
     db.session.commit()
 
+@use_signal(question_follow)
+@use_signal(question_unfollow)
 def update_question_following_count(sender):
     assert isinstance(sender, Question)
     sender.following_count = \
@@ -24,6 +27,8 @@ def update_question_following_count(sender):
     db.session.commit()
 
 
+@use_signal(question_comment_add)
+@use_signal(question_comment_delete)
 def update_question_comments_count(sender):
     assert isinstance(sender, Question)
     sender.comments_count = \
@@ -34,7 +39,8 @@ def update_question_comments_count(sender):
     db.session.commit()
 
 ############# answer ############
-
+@use_signal(answer_comment_add)
+@use_signal(answer_comment_delete)
 def update_answer_comments_count(sender):
     assert isinstance(sender, Answer)
     sender.comments_count = \
@@ -45,6 +51,9 @@ def update_answer_comments_count(sender):
     db.session.commit()
 
 
+@use_signal(answer_voteup)
+@use_signal(answer_votedown)
+@use_signal(answer_cancel_vote)
 def update_answer_vote_count(sender):
     print 'update_answer_vote_count'
     assert isinstance(sender, Answer)
@@ -61,7 +70,8 @@ def update_answer_vote_count(sender):
 
 
 ######### comment
-
+@use_signal(comment_voteup)
+@use_signal(comment_cancel_vote)
 def update_comment_vote_count(sender):
     assert isinstance(sender, Comment)
     voteup_count = UserOnComment.query.filter(
@@ -73,27 +83,3 @@ def update_comment_vote_count(sender):
 
     sender.voteup_count = voteup_count
     db.session.commit()
-
-
-def register_signals():
-    ######## connect ###########
-    question_comment_add.connect(update_question_comments_count)
-    question_comment_delete.connect(update_question_comments_count)
-
-    question_answer_add.connect(update_question_answers_count)
-
-    question_comment_add.connect(update_question_comments_count)
-    question_comment_delete.connect(update_question_comments_count)
-
-    question_follow.connect(update_question_following_count)
-    question_unfollow.connect(update_question_following_count)
-
-    answer_comment_add.connect(update_answer_comments_count)
-    answer_comment_delete.connect(update_answer_comments_count)
-
-    answer_voteup.connect(update_answer_vote_count)
-    answer_votedown.connect(update_answer_vote_count)
-    answer_cancel_vote.connect(update_answer_vote_count)
-
-    comment_voteup.connect(update_comment_vote_count)
-    comment_cancel_vote.connect(update_comment_vote_count)

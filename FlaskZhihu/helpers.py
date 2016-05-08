@@ -2,6 +2,7 @@
 __author__ = 'shn7798'
 
 from flask import session, request
+import blinker
 from FlaskZhihu.extensions import cache
 import functools
 
@@ -23,3 +24,12 @@ def keep_next_url(func):
                 next_url = request.form.get('next')
         return func(*args, next_url=next_url, **kwargs)
     return wrapper
+
+
+def use_signal(signal):
+    assert isinstance(signal, blinker.NamedSignal)
+
+    def decorator(func):
+        signal.connect(func)
+        return func
+    return decorator

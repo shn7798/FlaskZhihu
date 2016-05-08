@@ -1,9 +1,14 @@
 appnope==0.1.0
 backports.shutil-get-terminal-size==1.0.0
+blinker==1.4
 decorator==4.0.9
 Flask==0.10.1
+Flask-Cache==0.13.1
 Flask-Classy==0.6.10
+Flask-Login==0.3.2
+Flask-Principal==0.4.0
 Flask-SQLAlchemy==2.1
+Flask-SQLAlchemy-Cache==0.1.5
 Flask-Testing==0.4.2
 Flask-WTF==0.12
 gnureadline==6.3.3
@@ -19,6 +24,7 @@ pexpect==4.0.1
 pickleshare==0.7.2
 ptyprocess==0.5.1
 pymongo==3.2.2
+redis==2.10.5
 simplegeneric==0.8.1
 six==1.10.0
 sqlacodegen==1.1.6
