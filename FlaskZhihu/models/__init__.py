@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+__author__ = 'shn7798'
+
 from .answer import *
 from .collection import *
 from .comment import *
