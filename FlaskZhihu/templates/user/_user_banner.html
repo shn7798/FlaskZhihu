@@ -3,8 +3,9 @@
     <a href="{{ url_for('UserView:login') }}">登录</a>
 {% else %}
     欢迎你: {{ current_user.name }}({{ current_user.username }})
-    <a href="{{ url_for('UserView:edit') }}">修改资料</a> |
-    <a href="{{ url_for('UserView:logout') }}">退出</a>
+    <a href="{{ url_for('UserView:edit') }}">修改资料</a>
+    |<a href="{{ url_for('UserView:logout') }}">退出</a>
 {% endif %}
+    |<a href="{{ url_for('QuestionView:add') }}">提问</a>
 <hr>
 {% endblock %}

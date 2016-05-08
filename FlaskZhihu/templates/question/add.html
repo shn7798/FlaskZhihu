@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %} 提问 {% endblock %}
+{% block body %}
+    <form method="POST" action="{{ url_for('QuestionView:add') }}">
+    <ul>
+        <li>
+            {{ form.title.label }}
+            {{ form.title }}
+        </li>
+        <li>
+            {{ form.content.label }}
+            {{ form.content }}
+        </li>
+        <li>
+            <input type="submit" value="提问">
+        </li>
+    </ul>
+    </form>
+
+{% endblock %}

@@ -3,10 +3,10 @@ __author__ = 'shn7798'
 
 import random
 
-from flask import abort, render_template, current_app
+from flask import abort, render_template, current_app, redirect, url_for
 
 from flask.ext.classy import FlaskView, route
-from flask.ext.login import login_required
+from flask.ext.login import login_required, current_user
 
 from flask.ext.sqlalchemy_cache import FromCache, RelationshipCache
 from flask.ext.sqlalchemy import get_debug_queries
@@ -14,6 +14,8 @@ from flask.ext.sqlalchemy import get_debug_queries
 from FlaskZhihu.models import *
 from FlaskZhihu.helpers import cached
 from FlaskZhihu.extensions import cache
+from FlaskZhihu.forms import QuestionAddForm
+
 from pprint import pprint
 
 __all__ = ['QuestionView']
@@ -51,3 +53,20 @@ class QuestionView(FlaskView):
         print len(get_debug_queries())
 
         return response
+
+    @route(r'/add', methods=['GET', 'POST'])
+    @login_required
+    def add(self):
+        form = QuestionAddForm()
+        if form.validate_on_submit():
+            question = Question()
+            question.user = current_user
+            question.title = form.title.data
+            question.content = form.content.data
+
+            db.session.add(question)
+            db.session.commit()
+
+            return redirect(url_for('QuestionView:show', id=question.id))
+
+        return render_template('question/add.html', form=form)
