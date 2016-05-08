@@ -30,7 +30,7 @@ print Question.query.delete()
 mysql.commit()
 #exit(1)
 
-cur = mg.questions.find().limit(5000)
+cur = mg.questions.find().limit(100000)
 i = 0
 for item in cur:
     d = item['data']

@@ -26,7 +26,7 @@ mg = MongoClient('192.168.5.202').zhihu
 print User.query.delete()
 mysql.commit()
 #exit(1)
-cur = mg.people.find().limit(5000)
+cur = mg.people.find().limit(100000)
 
 i = 0
 for people in cur:
