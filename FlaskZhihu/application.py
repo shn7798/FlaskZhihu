@@ -7,6 +7,7 @@ from FlaskZhihu.views.index import index
 from FlaskZhihu.views import QuestionView, AnswerView, CommentView, UserView
 from FlaskZhihu.permissions import login_manager
 from FlaskZhihu.models.signals import register_signals
+from FlaskZhihu.api import *
 
 def create_app(settings=None):
     if not settings:
@@ -34,3 +35,10 @@ def init_views(app):
     AnswerView.register(app)
     CommentView.register(app)
     UserView.register(app)
+
+    # api
+    QuestionApiView.register(app)
+    AnswerApiView.register(app)
+    UserApiView.register(app)
+    CommentApiView.register(app)
+    CollectionApiView.register(app)

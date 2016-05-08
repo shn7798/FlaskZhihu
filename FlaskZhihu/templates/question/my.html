@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %} 我的提问 {% endblock %}
+{% block body %}
+{% include 'user/_user_banner.html' %}
+    <table border="1">
+    <thead>
+    <tr>
+        <td>编辑</td>
+        <td>创建时间</td>
+        <td>标题</td>
+    </tr>
+    </thead>
+    <tbody>
+    {% for question in questions %}
+        <tr>
+        <td><a href="{{ url_for('QuestionView:edit', id=question.id)}}">编辑</a></td>
+        <td>{{ question.create_time }}</td>
+        <td>
+            <a href="{{ url_for('QuestionView:show', id=question.id) }}">
+                {{ question.title }} ({{ question.answers_count }})
+            </a>
+        </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+{% endblock %}

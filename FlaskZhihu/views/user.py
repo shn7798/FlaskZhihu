@@ -15,7 +15,7 @@ __all__ = ['UserView']
 class UserView(FlaskView):
     route_base = '/user'
 
-    @route('/login', methods=['GET', 'POST'])
+    @route('/login/', methods=['GET', 'POST'])
     @keep_next_url
     def login(self, next_url=None):
         form = UserLoginForm()
@@ -30,14 +30,14 @@ class UserView(FlaskView):
         return render_template('user/login.html', form=form)
 
 
-    @route('/logout')
+    @route('/logout/')
     @login_required
     def logout(self):
         logout_user()
         return redirect(request.referrer or '/')
 
 
-    @route('/add', methods=['GET', 'POST'])
+    @route('/add/', methods=['GET', 'POST'])
     @keep_next_url
     def add(self, next_url=None):
         if current_user.is_anonymous:
@@ -55,7 +55,7 @@ class UserView(FlaskView):
         else:
             return redirect(next_url or '/')
 
-    @route('/edit', methods=['GET', 'POST'])
+    @route('/edit/', methods=['GET', 'POST'])
     @login_required
     @keep_next_url
     def edit(self, next_url=None):

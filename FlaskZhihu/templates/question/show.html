@@ -2,7 +2,7 @@
 {% block title %} {{ question.title }} {% endblock %}
 {% block body %}
 {% include 'user/_user_banner.html' %}
-    title: {{ question.title }}
+    title: <a href="https://www.zhihu.com/question/{{ question.id }}" target="_blank">{{ question.title }}</a>
 <hr>
     content: {{ question.content|safe }} <BR>
     answers:<BR>

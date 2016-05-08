@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %} 修改回答 {% endblock %}
+{% block body %}
+{% include 'user/_user_banner.html' %}
+<form method="POST" action=".">
+    <ul>
+        <li>
+            {{ form.content.label }}
+            {{ form.content }}
+        </li>
+        <li>
+            <input type="submit" value="保存">
+        </li>
+    </ul>
+    </form>
+{% endblock %}

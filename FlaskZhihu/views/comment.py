@@ -15,7 +15,7 @@ __all__ = ['CommentView']
 class CommentView(FlaskView):
     route_base = '/comment'
 
-    @route(r'/add', methods=['POST'])
+    @route(r'/add/', methods=['POST'])
     @login_required
     def add(self):
         form = CommentAddForm()
@@ -65,7 +65,7 @@ class CommentView(FlaskView):
             print form.data
             abort(404)
 
-    @route(r'/<int:id>/voteup')
+    @route(r'/<int:id>/voteup/')
     @login_required
     def voteup(self, id):
         comment = Comment.find_by_id(id, abort404=True)
@@ -77,7 +77,7 @@ class CommentView(FlaskView):
         return redirect(request.referrer or '/')
 
 
-    @route(r'/<int:id>/cancel_vote')
+    @route(r'/<int:id>/cancel_vote/')
     @login_required
     def cancel_vote(self, id):
         comment = Comment.find_by_id(id, abort404=True)
