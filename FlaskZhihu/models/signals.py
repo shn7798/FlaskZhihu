@@ -55,7 +55,6 @@ def update_answer_comments_count(sender):
 @use_signal(answer_votedown)
 @use_signal(answer_cancel_vote)
 def update_answer_vote_count(sender):
-    print 'update_answer_vote_count'
     assert isinstance(sender, Answer)
     ops = UserOnAnswer.query.filter(
         db.and_(
