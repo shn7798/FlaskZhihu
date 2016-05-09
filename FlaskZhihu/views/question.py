@@ -2,6 +2,9 @@
 __author__ = 'shn7798'
 
 import random
+import time
+import os
+
 
 from flask import abort, render_template, current_app, redirect, url_for
 
@@ -30,6 +33,7 @@ class QuestionView(FlaskView):
         if offset is None:
             if max is None:
                 max = Question.query.count()
+            random.seed('%s%d' %(os.umask(24), time.time()))
             offset = random.randint(0, max - limit)
         random_questions = Question.query.offset(offset).limit(limit)
         random_questions = sorted(random_questions, key=lambda x: x.answers_count, reverse=True)
