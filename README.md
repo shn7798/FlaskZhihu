@@ -16,3 +16,6 @@
 - 配置settings.py中的IPythonSettings中的参数
 - 运行python app.py
 - 浏览器打开http://127.0.0.1:5000/
+
+## 首页效果图
+![index_page](https://raw.githubusercontent.com/shn7798/FlaskZhihu/master/docs/images/flaskzhihu.png)
