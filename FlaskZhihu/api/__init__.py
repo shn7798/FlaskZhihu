@@ -20,11 +20,11 @@ class QuestionApiView(BaseApiView):
     route_base = '/question'
     decorators = [login_required]
 
-    @route('/follow/<int:id>')
+    @route('/follow/<int:id>/')
     def follow(self, id):
         pass
 
-    @route('/collect/<int:id>')
+    @route('/collect/<int:id>/')
     def collect(self, id):
         pass
 
@@ -33,19 +33,19 @@ class AnswerApiView(BaseApiView):
     route_base = '/answer'
     decorators = [login_required]
 
-    @route('/vote/<int:id>')
+    @route('/vote/<int:id>/')
     def vote(self, id):
         pass
 
-    @route('/follow/<int:id>')
+    @route('/follow/<int:id>/')
     def follow(self, id):
         pass
 
-    @route('/comment/<int:id>')
+    @route('/comment/<int:id>/')
     def comment(self, id):
         pass
 
-    @route('/thank/<int:id>')
+    @route('/thank/<int:id>/')
     def thank(self, id):
         pass
 
