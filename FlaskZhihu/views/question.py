@@ -29,19 +29,21 @@ __all__ = ['QuestionView']
 class QuestionView(FlaskView):
     route_base = '/question'
 
-    def _random_questions(self, limit=20, offset=None, max=None):
-        if offset is None:
-            if max is None:
-                max = Question.query.count()
-            random.seed('%s%d' %(os.umask(24), time.time()))
+    def _random_questions(self, limit=20, max=None):
+        if max is None:
+            max = Question.query.count()
+        random.seed('%s%d' %(os.umask(24), time.time()))
+        if max > limit:
             offset = random.randint(0, max - limit)
+        else:
+            offset = 0
         random_questions = Question.query.offset(offset).limit(limit)
         random_questions = sorted(random_questions, key=lambda x: x.answers_count, reverse=True)
         return random_questions
 
     @route(r'/')
     def index(self):
-        random_questions = self._random_questions(20, max=10000)
+        random_questions = self._random_questions(20)
         return render_template('question/index.html',
                                random_questions=random_questions)
 
@@ -55,7 +57,7 @@ class QuestionView(FlaskView):
             .filter(Answer.question_id == int(question.id)) \
             .all()
 
-        random_questions = self._random_questions(20, max=10000)
+        random_questions = self._random_questions(20)
         response = render_template('question/show.html',
                                    question=question, answers=answers,
                                    random_questions=random_questions)
