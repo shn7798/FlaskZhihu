@@ -1,4 +1,6 @@
 .idea
+settings.py
+scripts/import*
 # form https://github.com/notedit/flask-base
 
 *.py[cod]
