@@ -16,6 +16,9 @@ class Collection(DateTimeMixin, FindByIdMixin, db.Model):
     user_id = db.Column('user_id', db.ForeignKey(u'user.id'), nullable=False, index=True)
     user_hashid = db.Column('user_hashid', db.String(32))
 
+    answers_count = db.Column('answers_count', db.Integer, server_default='0')
+    following_count = db.Column('following_count', db.Integer, server_default='0')
+
     answers = db.relationship(u'Answer', secondary='collection_and_answer', backref='collections')
     comments = db.relationship(u'Comment', backref='collection')
     user_on_collection = db.relationship(u'UserOnCollection', backref='collection')

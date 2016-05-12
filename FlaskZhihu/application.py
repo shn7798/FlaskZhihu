@@ -4,7 +4,7 @@ from flask import Flask
 from FlaskZhihu.settings import DefaultSettings
 from FlaskZhihu.extensions import db, cache
 from FlaskZhihu.views.index import index
-from FlaskZhihu.views import QuestionView, AnswerView, CommentView, UserView
+from FlaskZhihu.views import QuestionView, AnswerView, CommentView, UserView, CollectionView
 from FlaskZhihu.permissions import login_manager
 from FlaskZhihu.api import *
 
@@ -34,6 +34,7 @@ def init_views(app):
     AnswerView.register(app)
     CommentView.register(app)
     UserView.register(app)
+    CollectionView.register(app)
 
     # api
     QuestionApiView.register(app)

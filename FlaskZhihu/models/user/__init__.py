@@ -171,7 +171,7 @@ class UserOnCollection(DateTimeMixin, FindByIdMixin, db.Model):
     user_id = db.Column('user_id', db.ForeignKey(u'user.id'), nullable=False, index=True)
     collection_id = db.Column('collection_id', db.ForeignKey(u'collection.id'), nullable=False, index=True)
     public = db.Column('public', db.Integer, server_default=db.text("'0'"))
-    following = db.Column('following', db.Integer, server_default=db.text("'0'"))
+    follow = db.Column('follow', db.Integer, server_default=db.text("'0'"))
 
 
 class UserOnComment(DateTimeMixin, FindByIdMixin, db.Model):

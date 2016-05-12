@@ -5,3 +5,4 @@ from .answer import *
 from .comment import *
 from .user import *
 from .question import *
+from .collection import *

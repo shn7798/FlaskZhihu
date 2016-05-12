@@ -3,6 +3,7 @@
 {% block body %}
 {% include 'user/_user_banner.html' %}
     作者: {{ answer.user.name }}
+    <BR><a href="{{ url_for('CollectionView:select_by_answer', answer_id=answer.id) }}">收藏</a>
 <hr>
     content: {{ answer.content|safe }} <BR>
 

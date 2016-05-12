@@ -82,3 +82,32 @@ def update_comment_vote_count(sender):
 
     sender.voteup_count = voteup_count
     db.session.commit()
+
+
+############# collection ############
+
+@use_signal(collection_answer_add)
+@use_signal(collection_answer_delete)
+def update_collection_answers_count(sender):
+    assert isinstance(sender, Collection)
+    answers_count = CollectionAndAnswer.query.filter(
+        CollectionAndAnswer.collection_id == sender.id
+    ).count()
+
+    sender.answers_count = answers_count
+    db.session.commit()
+
+
+@use_signal(collection_follow)
+@use_signal(collection_unfollow)
+def update_collection_following_count(sender):
+    assert isinstance(sender, Collection)
+    following_count = UserOnCollection.query.filter(
+        db.and_(
+            UserOnCollection.collection_id == sender.id,
+            UserOnCollection.follow == FOLLOW_ON,
+        )
+    ).count()
+
+    sender.following_count = following_count
+    db.session.commit()

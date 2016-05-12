@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %} 我的收藏夹 {% endblock %}
+{% block body %}
+{% include 'user/_user_banner.html' %}
+<a href="{{ url_for('CollectionView:add') }}">新建</a>
+<hr>
+    <table border="1">
+    <thead>
+        <tr>
+            <td>创建时间</td>
+            <td>收藏的答案</td>
+            <td>关注人数</td>
+            <td>编辑</td>
+            <td>删除</td>
+        </tr>
+    </thead>
+    <tbody>
+    {% for collection in collections %}
+        <tr>
+            <td>{{ collection.create_time }}</td>
+            <td><a href="{{ url_for('CollectionView:show', id=collection.id) }}">收藏的答案({{ collection.answers_count }})</a></td>
+            <td>{{ collection.following_count }}</td>
+            <td><a href="{{ url_for('CollectionView:edit', id=collection.id)}}">编辑</a></td>
+            <td><a href="{{ url_for('CollectionView:delete', id=collection.id)}}">删除</a></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+
+{% endblock %}

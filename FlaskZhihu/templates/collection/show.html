@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %} {{ collection.title }} {% endblock %}
+{% block body %}
+{% include 'user/_user_banner.html' %}
+    title: {{ collection.title }} <BR>
+    <a href="{{ url_for('CollectionView:edit', id=collection.id) }}">编辑</a>
+    |<a href="{{ url_for('UserView:follow_collection', id=collection.id) }}">关注</a>
+    |<a href="{{ url_for('UserView:unfollow_collection', id=collection.id) }}">取消关注</a>
+<hr>
+    description: {{ collection.description }} <BR>
+    answers:<BR>
+    <table border="1">
+    <tbody>
+    {% for answer in collection.answers %}
+        <tr>
+        <td><a href="{{ url_for('CollectionView:delete_answer', id=collection.id, answer_id=answer.id) }}">移除</a></td>
+        <td><a href="{{ url_for('AnswerView:voteup', id=answer.id) }}">赞同({{ answer.voteup_count }})</a></td>
+        <td><a href="{{ url_for('AnswerView:votedown', id=answer.id) }}">反对({{ answer.votedown_count }})</a></td>
+        <td><a href="{{ url_for('AnswerView:cancel_vote', id=answer.id) }}">取消意见</a></td>
+
+        <td width="40"><a href="{{ url_for('AnswerView:show', id=answer.id) }}">详情</a></td>
+        {% if answer.user %}
+            <td width="100"><span>{{ answer.user.name }} {{ answer.user.hashid }}</span></td>
+        {% else %}
+            <td>未知</td>
+        {% endif %}
+        <td><span>{{ answer.content|safe }}</span></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+
+{% endblock %}

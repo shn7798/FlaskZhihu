@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %} 创建收藏夹 {% endblock %}
+{% block body %}
+    <form method="POST" action="{{ url_for('CollectionView:add') }}">
+    <ul>
+        <li>
+            {{ form.title.label }}
+            {{ form.title }}
+        </li>
+        <li>
+            {{ form.description.label }}
+            {{ form.description }}
+        </li>
+        <li>
+            <input type="submit" value="创建">
+        </li>
+    </ul>
+    </form>
+
+{% endblock %}

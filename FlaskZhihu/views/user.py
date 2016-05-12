@@ -5,10 +5,12 @@ from flask import abort, render_template, redirect, request, url_for
 from flask.ext.classy import FlaskView, route
 from flask.ext.login import login_user, login_required, logout_user, current_user
 
-from FlaskZhihu.models import User
+from FlaskZhihu.models import User, Collection, UserOnCollection
 from FlaskZhihu.forms import UserLoginForm, UserAddForm, UserEditForm
 from FlaskZhihu.extensions import db, cache
 from FlaskZhihu.helpers import keep_next_url
+from FlaskZhihu.constants import FOLLOW_OFF, FOLLOW_ON
+from FlaskZhihu import signals
 
 __all__ = ['UserView']
 
@@ -75,3 +77,26 @@ class UserView(FlaskView):
             else:
                 return render_template('user/edit.html', form=form)
 
+
+    @route('/collection/<int:id>/follow/')
+    @login_required
+    @keep_next_url
+    def follow_collection(self, id, next_url=None):
+        collection = Collection.query.get_or_404(id)
+        current_user.follow_collection(collection)
+        db.session.commit()
+
+        signals.collection_follow.send(collection)
+        return redirect(next_url or url_for('CollectionView:my'))
+
+
+    @route('/collection/<int:id>/unfollow/')
+    @login_required
+    @keep_next_url
+    def unfollow_collection(self, id, next_url=None):
+        collection = Collection.query.get_or_404(id)
+        current_user.unfollow_collection(collection)
+        db.session.commit()
+
+        signals.collection_unfollow.send(collection)
+        return redirect(next_url or url_for('CollectionView:my'))

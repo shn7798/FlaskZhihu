@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 __author__ = 'shn7798'
 
+from FlaskZhihu.constants import *
+
+
 class CollectionOperationMixin(object):
     def add_collection_comment(self, collection, comment):
         comment.user = self
@@ -11,8 +14,8 @@ class CollectionOperationMixin(object):
 
     def follow_collection(self, collection):
         op = self.op_on_collection(collection, edit=True)
-        op.follow = True
+        op.follow = FOLLOW_ON
 
     def unfollow_collection(self, collection):
         op = self.op_on_collection(collection, edit=True)
-        op.follow = False
+        op.follow = FOLLOW_OFF
