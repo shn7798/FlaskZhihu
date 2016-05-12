@@ -31,7 +31,8 @@ class QuestionView(FlaskView):
 
     def _random_questions(self, limit=20, max=None):
         if max is None:
-            max = Question.query.count()
+            # max = Question.query.count() 会全表扫描
+            max = db.session.query(db.func.count(Question.id)).first()[0]
         random.seed('%s%d' %(os.umask(24), time.time()))
         if max > limit:
             offset = random.randint(0, max - limit)
