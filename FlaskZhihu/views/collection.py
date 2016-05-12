@@ -51,6 +51,7 @@ class CollectionView(FlaskView):
         ).first_or_404()
 
         collection.answers = []
+        db.session.delete(collection)
         db.session.commit()
         signals.collection_answer_delete.send(collection)
         return redirect(next_url or url_for('CollectionView:my'))
