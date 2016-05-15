@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 __author__ = 'shn7798'
 
+from FlaskZhihu.constants import *
+
+
 class QuestionOperationMixin(object):
     def add_question(self, question):
         """ 创建问题 """
@@ -19,9 +22,9 @@ class QuestionOperationMixin(object):
     def follow_question(self, question):
         """ 关注问题 """
         op = self.op_on_question(question, edit=True)
-        op.follow = True
+        op.follow = FOLLOW_ON
 
     def unfollow_question(self, question):
         """ 取消关注问题 """
         op = self.op_on_question(question, edit=True)
-        op.follow = False
+        op.follow = FOLLOW_OFF
