@@ -5,7 +5,7 @@ from pymongo import MongoClient
 
 from flask import Flask
 
-from FlaskZhihu.settings import TestSettings
+from FlaskZhihu.settings import IPythonSettings
 from FlaskZhihu.models import *
 from FlaskZhihu.extensions import db
 
@@ -16,7 +16,7 @@ def enc(s):
         return s
 
 app = Flask(__name__)
-app.config.from_object(TestSettings())
+app.config.from_object(IPythonSettings())
 db.init_app(app)
 
 ctx = app.app_context()
@@ -30,23 +30,26 @@ print Question.query.delete()
 mysql.commit()
 #exit(1)
 
-cur = mg.questions.find().limit(100000)
+cur = mg.questions.find() #.limit(100000)
 i = 0
 for item in cur:
-    d = item['data']
-    o = Question()
-    o.title = enc(d['title'])
-    o.id = int(d['id'])
-    o.excerpt = enc(d.get('excerpt', ''))
-    o.content = enc(d['detail'])
-    o.user_hashid = enc(d['author']['id'])
-    o.answers_count = Answer.query.filter(Answer.question_id == o.id).count()
+    try:
+        d = item['data']
+        o = Question()
+        o.title = enc(d['title'])
+        o.id = int(d['id'])
+        o.excerpt = enc(d.get('excerpt', ''))
+        o.content = enc(d['detail'])
+        o.user_hashid = enc(d['author']['id'])
+        # o.answers_count = Answer.query.filter(Answer.question_id == o.id).count()
 
-    u = User.get_user_by_hashid(o.user_hashid)
-    if u:
-        o.user = u
+        u = User.get_user_by_hashid(o.user_hashid)
+        if u:
+            o.user = u
 
-    mysql.add(o)
+        mysql.add(o)
+    except:
+        pass
 
     i += 1
     if i % 100 == 0:

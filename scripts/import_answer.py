@@ -5,7 +5,7 @@ from pymongo import MongoClient
 
 from flask import Flask
 
-from FlaskZhihu.settings import TestSettings
+from FlaskZhihu.settings import IPythonSettings
 from FlaskZhihu.models import *
 from FlaskZhihu.extensions import db
 import datetime
@@ -16,7 +16,7 @@ def enc(s):
         return s
 
 app = Flask(__name__)
-app.config.from_object(TestSettings())
+app.config.from_object(IPythonSettings())
 db.init_app(app)
 
 ctx = app.app_context()
@@ -30,34 +30,33 @@ print Answer.query.delete()
 mysql.commit()
 #exit(1)
 
-cur = mg.answers.find().limit(100000)
+cur = mg.answers.find() #.limit(100000)
 
 i = 0
 for item in cur:
-    d = item['data']
-    o = Answer()
-    o.id = d['id']
-    o.content = enc(d['content'])
-    o.excerpt = enc(d.get('excerpt', ''))
-    create_time = d.get('created_time', None)
-    if create_time:
-        o.create_time = datetime.datetime.fromtimestamp(create_time)
-    update_time = d.get('updated_time', None)
-    if update_time:
-        o.update_time = datetime.datetime.fromtimestamp(update_time)
+    try:
+        d = item['data']
+        o = Answer()
+        o.id = d['id']
+        o.content = enc(d['content'])
+        o.excerpt = enc(d.get('excerpt', ''))
+        create_time = d.get('created_time', None)
+        if create_time:
+            o.create_time = datetime.datetime.fromtimestamp(create_time)
+        update_time = d.get('updated_time', None)
+        if update_time:
+            o.update_time = datetime.datetime.fromtimestamp(update_time)
 
-    o.user_hashid = enc(d['author']['id'])
-    u = User.get_user_by_hashid(o.user_hashid)
-    if u:
-        o.user = u
+        o.user_hashid = enc(d['author']['id'])
+        u = User.get_user_by_hashid(o.user_hashid)
+        if u:
+            o.user = u
 
-    q_id = int(d['question']['id'])
-    o.question_id = q_id
-    # q = Question.query.filter(Question.id==q_id).first()
-    # if q:
-    #     o.question = q
+        o.question_id = int(d['question']['id'])
 
-    mysql.add(o)
+        mysql.add(o)
+    except:
+        pass
 
     i += 1
     if i % 100 == 0:

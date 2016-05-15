@@ -5,7 +5,7 @@ from pymongo import MongoClient
 
 from flask import Flask
 
-from FlaskZhihu.settings import TestSettings
+from FlaskZhihu.settings import IPythonSettings
 from FlaskZhihu.models import *
 from FlaskZhihu.extensions import db
 
@@ -16,7 +16,7 @@ def enc(s):
         return s
 
 app = Flask(__name__)
-app.config.from_object(TestSettings())
+app.config.from_object(IPythonSettings())
 db.init_app(app)
 
 ctx = app.app_context()
