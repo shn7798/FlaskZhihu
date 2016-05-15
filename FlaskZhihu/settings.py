@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 __author__ = 'shn7798'
+from redis import Redis
+
 
 class DefaultSettings(object):
     DEBUG = True
@@ -35,9 +37,16 @@ class IPythonSettings(object):
     ####### flask-cache ###########
     CACHE_TYPE = 'redis'
     CACHE_REDIS_HOST = '127.0.0.1'
-    CACHE_KEY_PREFIX = 'flask_'
+    CACHE_KEY_PREFIX = 'flask_cache_'
+    CACHE_REDIS_DB = 1
     #CACHE_TYPE = "simple"
-    #CACHE_DEFAULT_TIMEOUT = 600
+    CACHE_DEFAULT_TIMEOUT = 600
+
+    ######## flask-session ########
+    SESSION_TYPE = 'redis'
+    SESSION_KEY_PREFIX = 'flask_session_'
+    # SESSION_REDIS = Redis('127.0.0.1', db=0)
+    SESSION_REDIS = property(lambda self: Redis('127.0.0.1', db=1))
 
 
 class DeploySettings(IPythonSettings):
