@@ -68,6 +68,21 @@ def update_answer_vote_count(sender):
     db.session.commit()
 
 
+@use_signal(answer_thank)
+@use_signal(answer_unthank)
+def update_answer_thanks_count(sender):
+    assert isinstance(sender, Answer)
+    thanks_count = UserOnAnswer.query.filter(
+        db.and_(
+            UserOnAnswer.answer_id == sender.id,
+            UserOnAnswer.thank == THANK_ON,
+        )
+    ).count()
+
+    sender.thanks_count = thanks_count
+    db.session.commit()
+
+
 ######### comment
 @use_signal(comment_voteup)
 @use_signal(comment_cancel_vote)
@@ -111,3 +126,38 @@ def update_collection_following_count(sender):
 
     sender.following_count = following_count
     db.session.commit()
+
+
+@use_signal(answer_voteup)
+@use_signal(answer_votedown)
+@use_signal(answer_cancel_vote)
+def update_user_voteup_count(sender):
+    assert isinstance(sender, Answer)
+    user = sender.user
+
+    if user:
+        voteup_count, votedown_count = db.session.execute(
+            'select sum(voteup_count), sum(votedown_count) from answer where user_id = :user_id'
+            , dict(user_id=user.id)
+        ).first()
+
+        user.voteup_count = voteup_count or 0
+        user.votedown_count = votedown_count or 0
+        db.session.commit()
+
+
+@use_signal(answer_thank)
+@use_signal(answer_unthank)
+def update_user_thanks_count(sender):
+    assert isinstance(sender, Answer)
+    user = sender.user
+
+    if user:
+        thanks_count = db.session.execute(
+            'select sum(thanks_count) from answer where user_id = :user_id'
+            , dict(user_id=user.id)
+        ).first()[0]
+
+        user.thanks_count = thanks_count or 0
+        db.session.commit()
+

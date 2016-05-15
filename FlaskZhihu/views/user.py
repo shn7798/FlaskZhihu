@@ -5,7 +5,7 @@ from flask import abort, render_template, redirect, request, url_for
 from flask.ext.classy import FlaskView, route
 from flask.ext.login import login_user, login_required, logout_user, current_user
 
-from FlaskZhihu.models import User, Collection, UserOnCollection
+from FlaskZhihu.models import User, Collection, UserOnCollection, Answer
 from FlaskZhihu.forms import UserLoginForm, UserAddForm, UserEditForm
 from FlaskZhihu.extensions import db, cache
 from FlaskZhihu.helpers import keep_next_url
@@ -100,3 +100,37 @@ class UserView(FlaskView):
 
         signals.collection_unfollow.send(collection)
         return redirect(next_url or url_for('CollectionView:my'))
+
+    @route('/my/')
+    @login_required
+    def my(self):
+        return self.show(current_user.id)
+
+    @route(r'/<int:id>/')
+    def show(self, id):
+        user = User.query.get_or_404(id)
+        return render_template('user/show.html', user=user)
+
+    @route(r'/answer/<int:answer_id>/thank/', methods=['GET', 'POST'])
+    @login_required
+    @keep_next_url
+    def thank_answer(self, answer_id, next_url=None):
+        answer = Answer.query.get_or_404(answer_id)
+        current_user.thank_answer(answer)
+        db.session.commit()
+
+        signals.answer_thank.send(answer)
+        return redirect(next_url or url_for('AnswerView:show', id=answer_id))
+
+    @route(r'/answer/<int:answer_id>/unthank/', methods=['GET', 'POST'])
+    @login_required
+    @keep_next_url
+    def unthank_answer(self, answer_id, next_url=None):
+        answer = Answer.query.get_or_404(answer_id)
+        current_user.unthank_answer(answer)
+
+        db.session.commit()
+
+        signals.answer_unthank.send(answer)
+        return redirect(next_url or url_for('AnswerView:show', id=answer_id))
+

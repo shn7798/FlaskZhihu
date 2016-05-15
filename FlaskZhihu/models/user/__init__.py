@@ -57,6 +57,7 @@ class User(
     # count cache
     voteup_count = db.Column('voteup_count', db.Integer, server_default='0')
     votedown_count = db.Column('votedown_count', db.Integer, server_default='0')
+    thanks_count = db.Column('thanks_count', db.Integer, server_default='0')
 
     answers = db.relationship(u'Answer', backref='user')
     collections = db.relationship(u'Collection', backref='user')

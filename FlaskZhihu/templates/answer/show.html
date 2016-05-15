@@ -4,6 +4,11 @@
 {% include 'user/_user_banner.html' %}
     作者: {{ answer.user.name }}
     <BR><a href="{{ url_for('CollectionView:select_by_answer', answer_id=answer.id) }}">收藏</a>
+    |<a href="{{ url_for('AnswerView:voteup', id=answer.id) }}">赞同({{ answer.voteup_count }})</a>
+    |<a href="{{ url_for('AnswerView:votedown', id=answer.id) }}">反对({{ answer.votedown_count }})</a>
+    |<a href="{{ url_for('AnswerView:cancel_vote', id=answer.id) }}">取消意见</a>
+    |<a href="{{ url_for('UserView:thank_answer', answer_id=answer.id) }}">感谢({{ answer.thanks_count }})</a>
+    |<a href="{{ url_for('UserView:unthank_answer', answer_id=answer.id) }}">取消感谢</a>
 <hr>
     content: {{ answer.content|safe }} <BR>
 
