@@ -2,7 +2,7 @@
 from flask import Flask
 
 from FlaskZhihu.settings import DefaultSettings
-from FlaskZhihu.extensions import db, cache
+from FlaskZhihu.extensions import db, cache, session
 from FlaskZhihu.views.index import index
 from FlaskZhihu.views import QuestionView, AnswerView, CommentView, UserView, CollectionView
 from FlaskZhihu.permissions import login_manager
@@ -17,6 +17,7 @@ def create_app(settings=None):
 
     # flask login
     login_manager.init_app(app)
+    session.init_app(app)
 
     init_extensions(app)
     init_views(app)
